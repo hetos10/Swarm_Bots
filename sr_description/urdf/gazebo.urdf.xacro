@@ -1,77 +1,95 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="gazebo_setup">
-
-  <!-- ========================================
-       GAZEBO SPECIFIC SETUP
-       NO VISUAL/COLLISION HERE - DEBUGGING FRIENDLY
-       ======================================== -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:macro name="gazebo_setup">
 
-    <!-- Differential Drive Plugin -->
-    <gazebo>
-      <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
-        
-        <!-- Wheel joints -->
-        <left_joint>wheel_fl_joint</left_joint>
-        <right_joint>wheel_fr_joint</right_joint>
-        
-        <!-- Kinematics -->
-        <wheel_separation>0.40</wheel_separation>
-        <wheel_diameter>0.10</wheel_diameter>
-        
-        <!-- Limits -->
-        <max_wheel_torque>20</max_wheel_torque>
-        <max_wheel_acceleration>10</max_wheel_acceleration>
-        
-        <!-- Frames -->
-        <odometry_frame>odom</odometry_frame>
-        <robot_base_frame>base_link</robot_base_frame>
-        
-        <!-- ROS interface -->
-        <ros>
-          <remapping>cmd_vel:=cmd_vel</remapping>
-          <remapping>odom:=odom</remapping>
-        </ros>
-        
-        <!-- Output -->
-        <publish_odom>true</publish_odom>
-        <publish_odom_tf>true</publish_odom_tf>
-        <publish_wheel_tf>true</publish_wheel_tf>
-        
-      </plugin>
-    </gazebo>
-
-    <!-- Base link material -->
+    <!-- ================= BASE ================= -->
     <gazebo reference="base_link">
       <material>Gazebo/Grey</material>
-      <mu1>0.2</mu1>
-      <mu2>0.2</mu2>
+      <mu1>0.3</mu1>
+      <mu2>0.3</mu2>
     </gazebo>
 
-    <!-- Wheel materials and friction -->
+    <!-- ================= MECANUM WHEELS ================= -->
     <gazebo reference="wheel_fl">
-      <mu1>1.5</mu1>
-      <mu2>1.5</mu2>
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
       <material>Gazebo/Black</material>
     </gazebo>
 
     <gazebo reference="wheel_fr">
-      <mu1>1.5</mu1>
-      <mu2>1.5</mu2>
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
       <material>Gazebo/Black</material>
     </gazebo>
 
     <gazebo reference="wheel_bl">
-      <mu1>1.5</mu1>
-      <mu2>1.5</mu2>
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
       <material>Gazebo/Black</material>
     </gazebo>
 
     <gazebo reference="wheel_br">
-      <mu1>1.5</mu1>
-      <mu2>1.5</mu2>
+      <mu1>2.0</mu2>
+      <mu2>2.0</mu2>
       <material>Gazebo/Black</material>
+    </gazebo>
+
+    <!-- ================= ARM LINKS ================= -->
+    <gazebo reference="arm_base_link">
+      <material>Gazebo/Blue</material>
+      <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+    </gazebo>
+
+    <gazebo reference="arm_shoulder_link">
+      <material>Gazebo/Orange</material>
+      <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+    </gazebo>
+
+    <gazebo reference="arm_elbow_link">
+      <material>Gazebo/Orange</material>
+      <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+    </gazebo>
+
+    <gazebo reference="arm_wrist_link">
+      <material>Gazebo/Yellow</material>
+      <mu1>0.4</mu1>
+      <mu2>0.4</mu2>
+    </gazebo>
+
+    <gazebo reference="gripper_link">
+      <material>Gazebo/Red</material>
+      <mu1>0.8</mu1>
+      <mu2>0.8</mu2>
+    </gazebo>
+
+    <!-- ================= ARM JOINT DYNAMICS ================= -->
+    <gazebo reference="shoulder_joint">
+      <provideFeedback>true</provideFeedback>
+      <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+
+    <gazebo reference="elbow_joint">
+      <provideFeedback>true</provideFeedback>
+      <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+
+    <gazebo reference="wrist_joint">
+      <provideFeedback>true</provideFeedback>
+      <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+
+    <!-- ================= BASIC ODOM (TEMP DEBUG) ================= -->
+    <gazebo>
+      <plugin name="odom_plugin" filename="libgazebo_ros_p3d.so">
+        <bodyName>base_link</bodyName>
+        <topicName>odom</topicName>
+        <frameName>odom</frameName>
+        <updateRate>50.0</updateRate>
+      </plugin>
     </gazebo>
 
   </xacro:macro>

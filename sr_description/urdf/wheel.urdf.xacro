@@ -1,77 +1,45 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="wheels">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- ========================================
-       MECANUM WHEELS - STL MESHES
-       ======================================== -->
+  <xacro:macro name="mecanum_wheel" params="name x y mesh">
 
-  <!-- Wheel parameters -->
-  <xacro:property name="wheel_radius" value="0.05"/>
-  <xacro:property name="wheel_width" value="0.04"/>
-  <xacro:property name="wheel_mass" value="0.5"/>
-
-  <!-- Mesh paths -->
-  <xacro:property name="mesh_path" value="package://sr_description/meshes/"/>
-
-  <!-- Mecanum wheel macro -->
-  <xacro:macro name="mecanum_wheel" params="wheel_name wheel_type pos_x pos_y">
-
-    <link name="${wheel_name}">
-      <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="${wheel_mass}"/>
-        <inertia
-          ixx="${wheel_mass * wheel_radius * wheel_radius / 4}"
-          iyy="${wheel_mass * (wheel_radius*wheel_radius + wheel_width*wheel_width) / 12}"
-          izz="${wheel_mass * wheel_radius * wheel_radius / 4}"
-          ixy="0" ixz="0" iyz="0"/>
-      </inertial>
-
-      <!-- Visual: STL mesh for mecanum wheel -->
+    <link name="${name}">
       <visual>
-        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <origin rpy="0 0 0"/>
         <geometry>
-          <mesh filename="${mesh_path}mecanum_wheel_${wheel_type}.stl" scale="1.0 1.0 1.0"/>
+          <mesh filename="package://sr_description/meshes/${mesh}" scale="0.0018  0.0018 0.0018 "/>
         </geometry>
         <material name="dark_grey"/>
       </visual>
 
-      <!-- Collision: Simple cylinder (fast physics) -->
       <collision>
-        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <origin rpy="0 0 0"/>
         <geometry>
-          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+          <cylinder radius="0.05" length="0.04"/>
         </geometry>
       </collision>
+
+      <inertial>
+        <mass value="0.5"/>
+        <inertia ixx="0.001" iyy="0.001" izz="0.001"
+                 ixy="0" ixz="0" iyz="0"/>
+      </inertial>
     </link>
 
-    <!-- Wheel joint -->
-    <joint name="${wheel_name}_joint" type="continuous">
+    <joint name="${name}_joint" type="continuous">
       <parent link="base_link"/>
-      <child link="${wheel_name}"/>
-      <origin xyz="${pos_x} ${pos_y} 0.05" rpy="0 0 0"/>
+      <child link="${name}"/>
+      <origin xyz="${x} ${y} 0.05"/>
       <axis xyz="0 1 0"/>
-      <limit effort="20" velocity="10"/>
-      <dynamics damping="0.01" friction="0.01"/>
     </joint>
 
   </xacro:macro>
 
-  <!-- Create all 4 wheels -->
   <xacro:macro name="create_wheels">
-
-    <!-- Front-Left (LEFT type) -->
-    <xacro:mecanum_wheel wheel_name="wheel_fl" wheel_type="left" pos_x="0.17" pos_y="0.17"/>
-
-    <!-- Front-Right (RIGHT type) -->
-    <xacro:mecanum_wheel wheel_name="wheel_fr" wheel_type="right" pos_x="0.17" pos_y="-0.17"/>
-
-    <!-- Back-Left (RIGHT type - diagonal opposite) -->
-    <xacro:mecanum_wheel wheel_name="wheel_bl" wheel_type="right" pos_x="-0.17" pos_y="0.17"/>
-
-    <!-- Back-Right (LEFT type - diagonal opposite) -->
-    <xacro:mecanum_wheel wheel_name="wheel_br" wheel_type="left" pos_x="-0.17" pos_y="-0.17"/>
-
+    <xacro:mecanum_wheel name="wheel_fl" x="0.2" y="0.2" mesh="mecanum_wheel_left.STL"/>
+    <xacro:mecanum_wheel name="wheel_fr" x="0.2" y="-0.2" mesh="mecanum_wheel_right.STL"/>
+    <xacro:mecanum_wheel name="wheel_bl" x="-0.2" y="0.2" mesh="mecanum_wheel_right.STL"/>
+    <xacro:mecanum_wheel name="wheel_br" x="-0.2" y="-0.2" mesh="mecanum_wheel_left.STL"/>
   </xacro:macro>
 
 </robot>
