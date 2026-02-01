@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="base">
+
+  <!-- ========================================
+       BASE CHASSIS - SQUARE 40x40x20 cm
+       ======================================== -->
+
+  <!-- Robot parameters -->
+  <xacro:property name="chassis_length" value="0.40"/>
+  <xacro:property name="chassis_width" value="0.40"/>
+  <xacro:property name="chassis_height" value="0.20"/>
+  <xacro:property name="chassis_mass" value="5.0"/>
+
+  <!-- Wheel mounting positions -->
+  <xacro:property name="wheel_x_offset" value="0.17"/>
+  <xacro:property name="wheel_y_offset" value="0.17"/>
+  <xacro:property name="wheel_z_height" value="0.05"/>
+
+  <xacro:macro name="create_base">
+
+    <!-- BASE LINK (MAIN CHASSIS) -->
+    <link name="base_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${chassis_mass}"/>
+        <!-- Inertia for rectangular box -->
+        <inertia 
+          ixx="${chassis_mass * (chassis_width*chassis_width + chassis_height*chassis_height) / 12.0}"
+          iyy="${chassis_mass * (chassis_length*chassis_length + chassis_height*chassis_height) / 12.0}"
+          izz="${chassis_mass * (chassis_length*chassis_length + chassis_width*chassis_width) / 12.0}"
+          ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+
+      <!-- Visual: Simple grey box (40x40x20 cm) -->
+      <visual>
+        <origin xyz="0 0 ${chassis_height/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+        </geometry>
+        <material name="grey"/>
+      </visual>
+
+      <!-- Collision: Same box shape -->
+      <collision>
+        <origin xyz="0 0 ${chassis_height/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- ARM MOUNTING POINT (for future arm attachment) -->
+    <!-- This is where the arm will be attached -->
+    <link name="arm_base">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.01"/>
+        <inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+
+    <!-- ARM BASE JOINT (fixed to top of chassis) -->
+    <joint name="arm_base_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="arm_base"/>
+      <!-- Positioned at top center of chassis -->
+      <origin xyz="0 0 ${chassis_height}" rpy="0 0 0"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>

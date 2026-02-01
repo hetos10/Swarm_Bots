@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="wheels">
+
+  <!-- ========================================
+       MECANUM WHEELS - STL MESHES
+       ======================================== -->
+
+  <!-- Wheel parameters -->
+  <xacro:property name="wheel_radius" value="0.05"/>
+  <xacro:property name="wheel_width" value="0.04"/>
+  <xacro:property name="wheel_mass" value="0.5"/>
+
+  <!-- Mesh paths -->
+  <xacro:property name="mesh_path" value="package://sr_description/meshes/"/>
+
+  <!-- Mecanum wheel macro -->
+  <xacro:macro name="mecanum_wheel" params="wheel_name wheel_type pos_x pos_y">
+
+    <link name="${wheel_name}">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${wheel_mass}"/>
+        <inertia
+          ixx="${wheel_mass * wheel_radius * wheel_radius / 4}"
+          iyy="${wheel_mass * (wheel_radius*wheel_radius + wheel_width*wheel_width) / 12}"
+          izz="${wheel_mass * wheel_radius * wheel_radius / 4}"
+          ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+
+      <!-- Visual: STL mesh for mecanum wheel -->
+      <visual>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <geometry>
+          <mesh filename="${mesh_path}mecanum_wheel_${wheel_type}.stl" scale="1.0 1.0 1.0"/>
+        </geometry>
+        <material name="dark_grey"/>
+      </visual>
+
+      <!-- Collision: Simple cylinder (fast physics) -->
+      <collision>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Wheel joint -->
+    <joint name="${wheel_name}_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${wheel_name}"/>
+      <origin xyz="${pos_x} ${pos_y} 0.05" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="20" velocity="10"/>
+      <dynamics damping="0.01" friction="0.01"/>
+    </joint>
+
+  </xacro:macro>
+
+  <!-- Create all 4 wheels -->
+  <xacro:macro name="create_wheels">
+
+    <!-- Front-Left (LEFT type) -->
+    <xacro:mecanum_wheel wheel_name="wheel_fl" wheel_type="left" pos_x="0.17" pos_y="0.17"/>
+
+    <!-- Front-Right (RIGHT type) -->
+    <xacro:mecanum_wheel wheel_name="wheel_fr" wheel_type="right" pos_x="0.17" pos_y="-0.17"/>
+
+    <!-- Back-Left (RIGHT type - diagonal opposite) -->
+    <xacro:mecanum_wheel wheel_name="wheel_bl" wheel_type="right" pos_x="-0.17" pos_y="0.17"/>
+
+    <!-- Back-Right (LEFT type - diagonal opposite) -->
+    <xacro:mecanum_wheel wheel_name="wheel_br" wheel_type="left" pos_x="-0.17" pos_y="-0.17"/>
+
+  </xacro:macro>
+
+</robot>

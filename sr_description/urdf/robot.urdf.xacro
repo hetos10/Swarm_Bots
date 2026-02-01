@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="square_mecanum_robot">
+
+  <!-- ========================================
+       MAIN ROBOT FILE - INCLUDES ALL PARTS
+       ======================================== -->
+
+  <!-- Include all xacro files -->
+  <xacro:include filename="$(find sr_description)/urdf/materials.urdf.xacro"/>
+  <xacro:include filename="$(find sr_description)/urdf/base.urdf.xacro"/>
+  <xacro:include filename="$(find sr_description)/urdf/wheels.urdf.xacro"/>
+  <xacro:include filename="$(find sr_description)/urdf/gazebo.urdf.xacro"/>
+
+  <!-- Create the robot -->
+  <xacro:create_base/>
+  <xacro:create_wheels/>
+
+  <!-- Gazebo setup (separate from visual/collision) -->
+  <xacro:gazebo_setup/>
+
+</robot>
