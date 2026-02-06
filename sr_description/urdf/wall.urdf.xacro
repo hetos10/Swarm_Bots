@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="wall">
+
+  <!-- ========================================
+       BACK WALL - FOR PISTON MOUNTING
+       L-shaped back barrier on top of chassis
+       ======================================== -->
+
+  <!-- Wall parameters -->
+  <xacro:property name="wall_length" value="0.30"/>      <!-- Full width of chassis -->
+  <xacro:property name="wall_height" value="0.12"/>      <!-- Height of wall -->
+  <xacro:property name="wall_thickness" value="0.02"/>   <!-- Thickness -->
+  <xacro:property name="wall_mass" value="1.0"/>
+
+  <xacro:macro name="create_wall">
+
+    <!-- ===== BACK WALL (L-shaped support) ===== -->
+    <link name="back_wall">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${wall_mass}"/>
+        <!-- Vertical wall inertia -->
+        <inertia
+          ixx="${wall_mass * (wall_height*wall_height + wall_thickness*wall_thickness) / 12}"
+          iyy="${wall_mass * (wall_length*wall_length + wall_thickness*wall_thickness) / 12}"
+          izz="${wall_mass * (wall_length*wall_length + wall_height*wall_height) / 12}"
+          ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+
+      <!-- Visual: Vertical rectangular wall -->
+      <visual>
+        <!-- Wall positioned at back center, goes up -->
+        <origin xyz="0 ${-wall_length/2} ${wall_height/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${wall_thickness} ${wall_length} ${wall_height}"/>
+        </geometry>
+        <material name="dark_grey"/>
+      </visual>
+
+      <!-- Collision: Same wall shape -->
+      <collision>
+        <origin xyz="0 ${-wall_length/2} ${wall_height/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${wall_thickness} ${wall_length} ${wall_height}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Mount wall on top of chassis at back -->
+    <joint name="wall_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="back_wall"/>
+      <!-- Back of chassis, on top -->
+      <origin xyz="${-0.2} ${wall_length/2} ${0.12}" rpy="0 0 0"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>
