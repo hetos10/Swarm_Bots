@@ -12,6 +12,7 @@
   <exec_depend>ros_gz_sim</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>xacro</exec_depend>
+  <exec_depend>sr_description</exec_depend>
 
 
   <test_depend>ament_lint_auto</test_depend>
@@ -19,5 +20,6 @@
 
   <export>
     <build_type>ament_cmake</build_type>
+    <gazebo_ros gazebo_model_path="home/hetos_10/swarm_bots_ws/install/Swarm_Bots/share/" />
   </export>
 </package>

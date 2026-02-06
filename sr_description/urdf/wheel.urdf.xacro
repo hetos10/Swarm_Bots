@@ -36,10 +36,10 @@
   </xacro:macro>
 
   <xacro:macro name="create_wheels">
-    <xacro:mecanum_wheel name="wheel_fl" x="0.2" y="0.2" mesh="mecanum_wheel_left.STL"/>
-    <xacro:mecanum_wheel name="wheel_fr" x="0.2" y="-0.2" mesh="mecanum_wheel_right.STL"/>
-    <xacro:mecanum_wheel name="wheel_bl" x="-0.2" y="0.2" mesh="mecanum_wheel_right.STL"/>
-    <xacro:mecanum_wheel name="wheel_br" x="-0.2" y="-0.2" mesh="mecanum_wheel_left.STL"/>
+    <xacro:mecanum_wheel name="wheel_fl" x="0.2" y="0.2" mesh="mecanum_wheel_left.stl"/>
+    <xacro:mecanum_wheel name="wheel_fr" x="0.2" y="-0.2" mesh="mecanum_wheel_right.stl"/>
+    <xacro:mecanum_wheel name="wheel_bl" x="-0.2" y="0.2" mesh="mecanum_wheel_right.stl"/>
+    <xacro:mecanum_wheel name="wheel_br" x="-0.2" y="-0.2" mesh="mecanum_wheel_left.stl"/>
   </xacro:macro>
 
 </robot>

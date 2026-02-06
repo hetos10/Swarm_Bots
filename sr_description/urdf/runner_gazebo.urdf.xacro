@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="gazebo_setup_run">
+
+    <!-- ================= BASE ================= -->
+    <gazebo reference="base_link">
+      <mu1>0.3</mu1>
+      <mu2>0.3</mu2>
+    </gazebo>
+
+    <!-- ================= MECANUM WHEELS ================= -->
+    <gazebo reference="wheel_fl">
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+    </gazebo>
+
+    <gazebo reference="wheel_fr">
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+    </gazebo>
+
+    <gazebo reference="wheel_bl">
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+    </gazebo>
+
+    <gazebo reference="wheel_br">
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+    </gazebo>
+
+    <!-- ================= ACTUATOR LINKS ================= -->
+    <gazebo reference="piston_base"/>
+    <gazebo reference="piston_rod"/>
+    <gazebo reference="piston_head"/>
+    
+
+    <!-- ================= ARM JOINT DYNAMICS ================= -->
+    <gazebo reference="piston_rod_joint">
+      <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+
+
+    <!-- ================= ROS2 CONTROL (REQUIRED) ================= -->
+    
+
+  </xacro:macro>
+
+</robot>

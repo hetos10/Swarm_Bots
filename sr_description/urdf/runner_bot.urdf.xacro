@@ -6,11 +6,13 @@
   <xacro:include filename="$(find sr_description)/urdf/wheel.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/actuator.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/wall.urdf.xacro"/>
+  <xacro:include filename="$(find sr_description)/urdf/runner_gazebo.urdf.xacro"/>
 
 
   <xacro:create_base/>
   <xacro:create_wheels/>
   <xacro:create_wall/>
   <xacro:create_piston/>
+  <xacro:gazebo_setup_run/>
 
 </robot>

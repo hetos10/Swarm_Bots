@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="gazebo_setup_lift">
+
+    <!-- ================= BASE ================= -->
+    <gazebo reference="base_link">
+      <mu1>0.3</mu1>
+      <mu2>0.3</mu2>
+    </gazebo>
+
+    <!-- ================= MECANUM WHEELS ================= -->
+    <gazebo reference="wheel_fl">
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+    </gazebo>
+
+    <gazebo reference="wheel_fr">
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+    </gazebo>
+
+    <gazebo reference="wheel_bl">
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+    </gazebo>
+
+    <gazebo reference="wheel_br">
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+    </gazebo>
+
+    <!-- ================= ARM LINKS ================= -->
+    <gazebo reference="arm_base_link"/>
+    <gazebo reference="arm_shoulder_link"/>
+    <gazebo reference="arm_elbow_link"/>
+    <gazebo reference="arm_wrist_link"/>
+    <gazebo reference="gripper_link"/>
+
+    <!-- ================= ARM JOINT DYNAMICS ================= -->
+    <gazebo reference="shoulder_joint">
+      <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+
+    <gazebo reference="elbow_joint">
+      <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+
+    <gazebo reference="wrist_joint">
+      <implicitSpringDamper>true</implicitSpringDamper>
+    </gazebo>
+
+    <!-- ================= ROS2 CONTROL (REQUIRED) ================= -->
+    
+  </xacro:macro>
+
+</robot>

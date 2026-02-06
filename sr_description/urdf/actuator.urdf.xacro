@@ -1,60 +1,55 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="piston">
 
-  <!-- ========================================
-       PISTON ACTUATOR - MOUNTED ON WALL
-       Pushes box that sits on top of bot
-       ======================================== -->
-
   <!-- Piston parameters -->
-  <xacro:property name="piston_base_length" value="0.07"/>    <!-- Retracted length -->
-  <xacro:property name="piston_rod_length" value="0.20"/>      <!-- Max extension -->
-  <xacro:property name="piston_rod_radius" value="0.015"/>     <!-- Rod diameter -->
-  <xacro:property name="piston_base_radius" value="0.025"/>    <!-- Base diameter -->
+  <xacro:property name="piston_base_length" value="0.05"/>
+  <xacro:property name="piston_rod_length" value="0.1"/>
+  <xacro:property name="piston_rod_radius" value="0.015"/>
+  <xacro:property name="piston_base_radius" value="0.025"/>
   <xacro:property name="piston_mass" value="2.0"/>
+  <xacro:property name="chassis_length" value="0.32"/>
 
   <xacro:macro name="create_piston">
 
-    <!-- ===== PISTON BASE (Fixed to wall) ===== -->
+    <!-- ================= BASE ================= -->
     <link name="piston_base">
       <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="0.5"/>
-        <inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/>
+        <origin xyz="0 0 0"/>
+        <mass value="0.3"/>
+        <inertia ixx="0.001" iyy="0.001" izz="0.001"
+                 ixy="0" ixz="0" iyz="0"/>
       </inertial>
 
-      <!-- Visual: Cylinder base (piston housing) -->
       <visual>
         <origin xyz="0 0 0" rpy="1.5708 0 0"/>
         <geometry>
-          <cylinder radius="${piston_base_radius}" length="${piston_base_length}"/>
+          <cylinder radius="${piston_base_radius}"
+                    length="${piston_base_length}"/>
         </geometry>
         <material name="dark_grey"/>
       </visual>
 
-      <!-- Collision: Same cylinder -->
       <collision>
         <origin xyz="0 0 0" rpy="1.5708 0 0"/>
         <geometry>
-          <cylinder radius="${piston_base_radius}" length="${piston_base_length}"/>
+          <cylinder radius="${piston_base_radius}"
+                    length="${piston_base_length}"/>
         </geometry>
       </collision>
     </link>
 
-    <!-- Mount piston base to wall -->
+    <!-- Fixed to wall -->
     <joint name="piston_base_joint" type="fixed">
       <parent link="back_wall"/>
       <child link="piston_base"/>
-      <!-- Center of wall, extends forward -->
-      <origin xyz="0 -0.15 0.06" rpy="0 0 0"/>
+      <origin xyz="0.01 -0.15 0.06"/>
     </joint>
 
-    <!-- ===== PISTON ROD (Moving part - extends/retracts) ===== -->
+    <!-- ================= ROD ================= -->
     <link name="piston_rod">
       <inertial>
         <origin xyz="${piston_rod_length/2} 0 0" rpy="0 0 0"/>
         <mass value="${piston_mass}"/>
-        <!-- Inertia for cylinder -->
         <inertia
           ixx="${piston_mass * piston_rod_radius * piston_rod_radius / 4}"
           iyy="${piston_mass * (piston_rod_radius*piston_rod_radius + piston_rod_length*piston_rod_length) / 12}"
@@ -62,7 +57,7 @@
           ixy="0" ixz="0" iyz="0"/>
       </inertial>
 
-      <!-- Visual: Extendable rod -->
+      <!-- Rod starts at joint, extends forward -->
       <visual>
         <origin xyz="${piston_rod_length/2} 0 0" rpy="0 1.5708 0"/>
         <geometry>
@@ -71,7 +66,6 @@
         <material name="black"/>
       </visual>
 
-      <!-- Collision: Same rod -->
       <collision>
         <origin xyz="${piston_rod_length/2} 0 0" rpy="0 1.5708 0"/>
         <geometry>
@@ -80,52 +74,48 @@
       </collision>
     </link>
 
-    <!-- Prismatic joint: Piston rod slides in X direction -->
+
+    <!-- ================= PRISMATIC JOINT ================= -->
     <joint name="piston_rod_joint" type="prismatic">
       <parent link="piston_base"/>
       <child link="piston_rod"/>
-      <!-- Connects at base of piston housing -->
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <!-- Moves along X axis (forward/backward) -->
+      <origin xyz="0 0 0"/>
       <axis xyz="1 0 0"/>
-      <!-- Min: retracted (0), Max: fully extended (rod_length) -->
-      <limit lower="0" upper="${piston_rod_length}" effort="100" velocity="0.5"/>
-      <!-- Damping and friction for smooth motion -->
+
+      <!-- Starts retracted at 0 -->
+      <limit lower="0" upper="${chassis_length}"
+             effort="100" velocity="0.5"/>
+
       <dynamics damping="10" friction="0.5"/>
     </joint>
 
-    <!-- ===== PISTON HEAD (Pusher plate - at tip of rod) ===== -->
+    <!-- ================= PUSHER HEAD ================= -->
     <link name="piston_head">
       <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0"/>
         <mass value="0.5"/>
-        <inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/>
+        <inertia ixx="0.001" iyy="0.001" izz="0.001"
+                 ixy="0" ixz="0" iyz="0"/>
       </inertial>
 
-      <!-- Visual: Square pusher plate -->
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <!-- Square plate at tip of piston -->
-          <box size="0.10 0.20 0.05"/>
+          <box size="0.04 0.18 0.05"/>
         </geometry>
         <material name="red"/>
       </visual>
 
-      <!-- Collision: Plate for pushing box -->
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <box size="0.10 0.20 0.05"/>
+          <box size="0.04 0.18 0.05"/>
         </geometry>
       </collision>
     </link>
 
-    <!-- Piston head fixed to rod tip -->
+    <!-- Head at rod tip -->
     <joint name="piston_head_joint" type="fixed">
       <parent link="piston_rod"/>
       <child link="piston_head"/>
-      <!-- At the end of the rod -->
       <origin xyz="${piston_rod_length} 0 0" rpy="0 0 0"/>
     </joint>
 
