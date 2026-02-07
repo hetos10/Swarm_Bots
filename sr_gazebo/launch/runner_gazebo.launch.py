@@ -1,8 +1,15 @@
-from launch import LaunchDescription
-from launch_ros.actions import Node
-from launch.actions import ExecuteProcess
-from ament_index_python.packages import get_package_share_directory
 import os
+from os import pathsep
+from pathlib import Path
+from ament_index_python.packages import get_package_share_directory
+
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable
+from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution, PythonExpression
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+
+from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 import xacro
 
 
@@ -19,13 +26,17 @@ def generate_launch_description():
     robot_desc = xacro.process_file(xacro_file)
     robot_description = {"robot_description": robot_desc.toxml()}
 
+  
     return LaunchDescription([
 
         # Start Gazebo with world
-        ExecuteProcess(
-            cmd=["gz", "sim", world_file],
-            output="screen"
-        ),
+        IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory("ros_gz_sim"), "launch"), "/gz_sim.launch.py"]),
+                launch_arguments={
+                    "gz_args": PythonExpression(["'", world_file, " -v 4 -r'"])
+                }.items()
+             ),
 
         # Robot state publisher
         Node(

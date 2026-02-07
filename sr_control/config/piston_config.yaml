@@ -1,0 +1,12 @@
+piston_controller:
+  min_position: -0.15         # Fully retracted (inside wall)
+  max_position: 0.25          # Fully extended (to front)
+  max_velocity: 0.5           # m/s
+  trajectory_duration: 2.0    # seconds
+  update_rate: 50             # Hz
+  debug: false
+
+joint:
+  name: piston_rod_joint
+  type: prismatic
+  axis: [1, 0, 0]             # X-axis

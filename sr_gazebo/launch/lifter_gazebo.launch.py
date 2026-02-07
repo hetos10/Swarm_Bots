@@ -52,7 +52,7 @@ def generate_launch_description():
             executable="create",
             arguments=[
                 "-topic", "robot_description",
-                "-name", "lifter"
+                "-name", "lifter",
             ],
             output="screen"
         ),

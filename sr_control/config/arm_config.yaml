@@ -1,0 +1,24 @@
+arm_controller:
+  upper_arm_length: 0.15      # 15cm
+  forearm_length: 0.15        # 15cm
+  max_reach: 0.30             # 30cm
+  trajectory_duration: 2.0    # seconds
+  update_rate: 50             # Hz
+  debug: false
+
+joints:
+  shoulder:
+    name: shoulder_joint
+    type: revolute
+    min: -3.14159
+    max: 3.14159
+  elbow:
+    name: elbow_joint
+    type: revolute
+    min: -3.14159
+    max: 3.14159
+  wrist:
+    name: wrist_joint
+    type: revolute
+    min: -3.14159
+    max: 3.14159
