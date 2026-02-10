@@ -13,14 +13,14 @@
   <library_effects>
     <effect id="Arena_Image-effect">
       <profile_COMMON>
-        <newparam sid="Hola_Batallion_Gazebo_Texture_png-surface">
+        <newparam sid="SwarmBotsMap_png-surface">
           <surface type="2D">
-            <init_from>Hola_Batallion_Gazebo_Texture_png</init_from>
+            <init_from>SwarmBotsMap_png</init_from>
           </surface>
         </newparam>
-        <newparam sid="Hola_Batallion_Gazebo_Texture_png-sampler">
+        <newparam sid="SwarmBotsMap_png-sampler">
           <sampler2D>
-            <source>Hola_Batallion_Gazebo_Texture_png-surface</source>
+            <source>SwarmBotsMap_png-surface</source>
           </sampler2D>
         </newparam>
         <technique sid="common">
@@ -29,7 +29,7 @@
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <texture texture="Hola_Batallion_Gazebo_Texture_png-sampler" texcoord="UVMap"/>
+              <texture texture="SwarmBotsMap_png-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.5</float>
@@ -40,8 +40,8 @@
     </effect>
   </library_effects>
   <library_images>
-    <image id="Hola_Batallion_Gazebo_Texture_png" name="Hola_Batallion_Gazebo_Texture_png">
-      <init_from>Hola Batallion Gazebo Texture.png</init_from>
+    <image id="SwarmBotsMap_png" name="SwarmBotsMap_png">
+      <init_from>SwarmBotsMap.png</init_from>
     </image>
   </library_images>
   <library_materials>
@@ -263,7 +263,7 @@
   </library_geometries>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
-      <node id="Aruko_004" name="Aruko.004" type="NODE">
+      <!-- <node id="Aruko_004" name="Aruko.004" type="NODE">
         <matrix sid="transform">-1 -8.74228e-8 0 1.2192 8.74228e-8 -1 0 -1.2192 0 0 1 0.001 0 0 0 1</matrix>
         <instance_geometry url="#Vert_007-mesh" name="Aruko.004">
           <bind_material>
@@ -310,7 +310,7 @@
             </technique_common>
           </bind_material>
         </instance_geometry>
-      </node>
+      </node> -->
       <node id="Arena_Area" name="Arena Area" type="NODE">
         <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
         <instance_geometry url="#Vert-mesh" name="Arena Area">

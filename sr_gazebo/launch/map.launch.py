@@ -20,7 +20,7 @@ def generate_launch_description():
     pkg_gazebo = get_package_share_directory("sr_gazebo")
 
     xacro_file = os.path.join(pkg_desc, "urdf", "lifter_bot.urdf.xacro")
-    world_file = os.path.join(pkg_gazebo, "worlds", "map.world")
+    world_file = os.path.join(pkg_gazebo, "worlds", "map.sdf")
 
     # Process xacro
     robot_desc = xacro.process_file(xacro_file)
