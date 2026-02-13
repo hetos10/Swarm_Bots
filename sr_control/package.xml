@@ -18,6 +18,15 @@
   <depend>trajectory_msgs</depend>
   <depend>std_msgs</depend>
   <depend>nav_msgs</depend>
+  <depend>sr_description</depend>
+  <depend>sr_gazebo</depend>
+  <depend>joint_state_broadcaster</depend>
+  <depend>mecanum_drive_controller</depend>
+
+
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>ros2_controllers</exec_depend>
+  <exec_depend>ros2_control</exec_depend>
   
   <export>
     <build_type>ament_python</build_type>

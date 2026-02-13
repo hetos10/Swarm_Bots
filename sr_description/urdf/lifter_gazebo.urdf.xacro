@@ -51,7 +51,11 @@
     </gazebo>
 
     <!-- ================= ROS2 CONTROL (REQUIRED) ================= -->
-    
+    <gazebo>
+        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+            <parameters>$(find sr_control)/config/lifter_config.yaml</parameters>
+        </plugin>
+    </gazebo>
   </xacro:macro>
 
 </robot>

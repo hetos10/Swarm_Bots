@@ -69,7 +69,7 @@
         <geometry>
           <mesh>
             <uri>model://arena_terrain/meshes/arena_terrain.dae</uri>
-            <scale>10 10 1</scale>
+            <scale>5 5 1</scale>
 
           </mesh>
         </geometry>

@@ -6,6 +6,7 @@
   <xacro:include filename="$(find sr_description)/urdf/wheel.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/arm.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/lifter_gazebo.urdf.xacro"/>
+  <xacro:include filename="$(find sr_description)/urdf/lifter_control.urdf.xacro"/>
 
 
   <xacro:create_base/>
