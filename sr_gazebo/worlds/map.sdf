@@ -78,7 +78,11 @@
       <uri>model://arena_terrain</uri>
     </include>
 
-
+    <include>
+      <name>box_red</name>
+      <pose>0 0 0.001 0 0 -1.5708</pose>
+      <uri>model://box_red</uri>
+    </include>
 
   </world>
 </sdf>

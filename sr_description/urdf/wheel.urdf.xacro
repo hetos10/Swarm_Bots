@@ -1,46 +1,92 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="mecanum_wheel" params="name x y mesh shaft_link offset">
+  <xacro:macro name="mecanum_wheel" params="name mesh shaft_link offset axis">
 
     <link name="${name}">
       <visual>
         <origin rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://sr_description/meshes/${mesh}" scale="0.0018  0.0018 0.0018 "/>
+          <mesh filename="package://sr_description/meshes/${mesh}" scale="0.0018 0.0018 0.0018"/>
         </geometry>
         <material name="dark_grey"/>
       </visual>
 
       <collision>
-        <origin rpy="0 0 0"/>
+        <!-- Cylinder axis along X (wheel rotation axis) -->
+        <origin rpy="1.5708 0 0"/>
         <geometry>
           <cylinder radius="0.05" length="0.04"/>
         </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>2.0</mu>
+              <mu2>2.0</mu2>
+            </ode>
+          </friction>
+        </surface>
       </collision>
 
       <inertial>
         <origin rpy="0 0 0"/>
         <mass value="0.5"/>
-        <inertia ixx="0.001" iyy="0.001" izz="0.001"
-                 ixy="0" ixz="0" iyz="0"/>
+        <inertia
+          ixx="0.001"
+          iyy="0.001"
+          izz="0.001"
+          ixy="0"
+          ixz="0"
+          iyz="0"/>
       </inertial>
     </link>
 
     <joint name="${name}_joint" type="continuous">
       <parent link="${shaft_link}"/>
       <child link="${name}"/>
-      <origin xyz=" 0 ${offset} 0 "/>
-      <axis xyz="0 1 0"/>
+      <!-- Offset outward from shaft -->
+      <origin xyz="0 ${offset} 0"/>
+      <!-- Rotation around X axis -->
+      <axis xyz="0 ${axis}  0"/>
     </joint>
 
   </xacro:macro>
 
+
   <xacro:macro name="create_wheels">
-    <xacro:mecanum_wheel name="wheel_fl" x="0.2" y="0.2" mesh="mecanum_wheel_left.stl" shaft_link="shaft_fl" offset= "0.05"/>
-    <xacro:mecanum_wheel name="wheel_fr" x="0.2" y="-0.2" mesh="mecanum_wheel_right.stl" shaft_link="shaft_fr" offset= "0.05"/>
-    <xacro:mecanum_wheel name="wheel_bl" x="-0.2" y="0.2" mesh="mecanum_wheel_right.stl" shaft_link="shaft_bl" offset= "0.05"/>
-    <xacro:mecanum_wheel name="wheel_br" x="-0.2" y="-0.2" mesh="mecanum_wheel_left.stl" shaft_link="shaft_br" offset= "0.05"/>
+
+    <!-- Front Left -->
+    <xacro:mecanum_wheel
+      name="wheel_fl"
+      mesh="mecanum_wheel_left.stl"
+      shaft_link="shaft_fl"
+      offset="0.05"
+      axis="1"/>
+
+    <!-- Front Right -->
+    <xacro:mecanum_wheel
+      name="wheel_fr"
+      mesh="mecanum_wheel_right.stl"
+      shaft_link="shaft_fr"
+      offset="0.05"
+      axis="-1"/>
+
+    <!-- Back Left -->
+    <xacro:mecanum_wheel
+      name="wheel_bl"
+      mesh="mecanum_wheel_right.stl"
+      shaft_link="shaft_bl"
+      offset="0.05"
+      axis="1"/>
+
+    <!-- Back Right -->
+    <xacro:mecanum_wheel
+      name="wheel_br"
+      mesh="mecanum_wheel_left.stl"
+      shaft_link="shaft_br"
+      offset="0.05"
+      axis="-1"/>
+
   </xacro:macro>
 
 </robot>

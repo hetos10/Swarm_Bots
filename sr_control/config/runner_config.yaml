@@ -9,7 +9,7 @@ controller_manager:
       type: mecanum_drive_controller/MecanumDriveController
 
     piston_controller:
-      type: joint_trajectory_controller/JointTrajectoryController
+      type: position_controllers/JointGroupPositionController
 
 
 mecanum_controller:

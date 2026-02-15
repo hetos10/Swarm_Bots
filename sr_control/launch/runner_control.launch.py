@@ -17,8 +17,12 @@ def generate_launch_description():
     xacro_file = os.path.join(sr_description_pkg,'urdf','runner_bot.urdf.xacro')
     rviz_config_file = os.path.join(sr_description_pkg,'rviz','view.rviz')
     world_path = os.path.join(sr_gazebo_pkg, 'worlds', 'empty.sdf')
-    robot_description_config = Command(['xacro ', xacro_file])
-    description_params_file = {'robot_description': robot_description_config}
+    description_params_file= {
+        "robot_description": ParameterValue(
+            Command(['xacro ', xacro_file]),
+            value_type=str
+        )
+    }
     controller_params_file = os.path.join(get_package_share_directory('sr_control'),'config','runner_config.yaml')
 
     gazebo = IncludeLaunchDescription(

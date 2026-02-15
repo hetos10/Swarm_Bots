@@ -24,9 +24,10 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'mecanum_controller = sr_control.mecanum_controller:main',
+            'goal_controller = sr_control.goal_controller:main',
             'arm_controller = sr_control.arm_controller:main',
             'piston_controller = sr_control.piston_controller:main',
+           
         ],
     },
 )
