@@ -78,11 +78,279 @@
       <uri>model://arena_terrain</uri>
     </include>
 
-    <include>
-      <name>box_red</name>
-      <pose>0 0 0.001 0 0 -1.5708</pose>
-      <uri>model://box_red</uri>
-    </include>
-
+        <model name='crate_red_1'>
+      <static>false</static>
+      <pose>-0.5 -0.5 0.2 0 0 0</pose>
+      
+      <link name='box_link'>
+        <!-- ===== VISUAL (Appearance) ===== -->
+        <visual name='visual'>
+          <pose>0 0 0 0 0 0</pose>
+          <cast_shadows>true</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.3 0.3 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.8 0.0 0.0 1.0</ambient>
+            <diffuse>1.0 0.0 0.0 1.0</diffuse>
+            <specular>0.5 0.5 0.5 1.0</specular>
+            <emissive>0.0 0.0 0.0 1.0</emissive>
+          </material>
+        </visual>
+        
+        <!-- ===== COLLISION (Physics) ===== -->
+        <collision name='collision'>
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.3 0.3</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.7</mu>
+                <mu2>0.7</mu2>
+                <slip1>0.0</slip1>
+                <slip2>0.0</slip2>
+              </ode>
+            </friction>
+            <contact>
+              <ode>
+                <soft_cfm>0.0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e13</kp>
+                <kd>1.0</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0.0</min_depth>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+        
+        <!-- ===== INERTIAL (Mass and Moment) ===== -->
+        <inertial>
+          <mass>5.0</mass>
+          <pose>0 0 0 0 0 0</pose>
+          <inertia>
+            <ixx>0.04167</ixx>
+            <iyy>0.04167</iyy>
+            <izz>0.04167</izz>
+            <ixy>0.0</ixy>
+            <ixz>0.0</ixz>
+            <iyz>0.0</iyz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+    
+    <!-- ==================== BOX 2 (GREEN) - For Pair 2 (Lifter2) ==================== -->
+    <model name='crate_green_2'>
+      <static>false</static>
+      <pose>-0.5 0.0 0.2 0 0 0</pose>
+      
+      <link name='box_link'>
+        <!-- ===== VISUAL (Appearance) ===== -->
+        <visual name='visual'>
+          <pose>0 0 0 0 0 0</pose>
+          <cast_shadows>true</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.3 0.3 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.0 0.8 0.0 1.0</ambient>
+            <diffuse>0.0 1.0 0.0 1.0</diffuse>
+            <specular>0.5 0.5 0.5 1.0</specular>
+            <emissive>0.0 0.0 0.0 1.0</emissive>
+          </material>
+        </visual>
+        
+        <!-- ===== COLLISION (Physics) ===== -->
+        <collision name='collision'>
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.3 0.3</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.7</mu>
+                <mu2>0.7</mu2>
+                <slip1>0.0</slip1>
+                <slip2>0.0</slip2>
+              </ode>
+            </friction>
+            <contact>
+              <ode>
+                <soft_cfm>0.0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e13</kp>
+                <kd>1.0</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0.0</min_depth>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+        
+        <!-- ===== INERTIAL (Mass and Moment) ===== -->
+        <inertial>
+          <mass>5.0</mass>
+          <pose>0 0 0 0 0 0</pose>
+          <inertia>
+            <ixx>0.04167</ixx>
+            <iyy>0.04167</iyy>
+            <izz>0.04167</izz>
+            <ixy>0.0</ixy>
+            <ixz>0.0</ixz>
+            <iyz>0.0</iyz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+    
+    <!-- ==================== BOX 3 (BLUE) - For Pair 3 (Lifter3) ==================== -->
+    <model name='crate_blue_3'>
+      <static>false</static>
+      <pose>-0.5 0.5 0.2 0 0 0</pose>
+      
+      <link name='box_link'>
+        <!-- ===== VISUAL (Appearance) ===== -->
+        <visual name='visual'>
+          <pose>0 0 0 0 0 0</pose>
+          <cast_shadows>true</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.3 0.3 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.0 0.0 0.8 1.0</ambient>
+            <diffuse>0.0 0.0 1.0 1.0</diffuse>
+            <specular>0.5 0.5 0.5 1.0</specular>
+            <emissive>0.0 0.0 0.0 1.0</emissive>
+          </material>
+        </visual>
+        
+        <!-- ===== COLLISION (Physics) ===== -->
+        <collision name='collision'>
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.3 0.3</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.7</mu>
+                <mu2>0.7</mu2>
+                <slip1>0.0</slip1>
+                <slip2>0.0</slip2>
+              </ode>
+            </friction>
+            <contact>
+              <ode>
+                <soft_cfm>0.0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e13</kp>
+                <kd>1.0</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0.0</min_depth>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+        
+        <!-- ===== INERTIAL (Mass and Moment) ===== -->
+        <inertial>
+          <mass>5.0</mass>
+          <pose>0 0 0 0 0 0</pose>
+          <inertia>
+            <ixx>0.04167</ixx>
+            <iyy>0.04167</iyy>
+            <izz>0.04167</izz>
+            <ixy>0.0</ixy>
+            <ixz>0.0</ixz>
+            <iyz>0.0</iyz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+    
+    <!-- ==================== BOX 4 (YELLOW) - For Pair 4 (Lifter4) ==================== -->
+    <model name='crate_yellow_4'>
+      <static>false</static>
+      <pose>-0.5 1.0 0.2 0 0 0</pose>
+      
+      <link name='box_link'>
+        <!-- ===== VISUAL (Appearance) ===== -->
+        <visual name='visual'>
+          <pose>0 0 0 0 0 0</pose>
+          <cast_shadows>true</cast_shadows>
+          <geometry>
+            <box>
+              <size>0.3 0.3 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.0 1.0</ambient>
+            <diffuse>1.0 1.0 0.0 1.0</diffuse>
+            <specular>0.5 0.5 0.5 1.0</specular>
+            <emissive>0.0 0.0 0.0 1.0</emissive>
+          </material>
+        </visual>
+        
+        <!-- ===== COLLISION (Physics) ===== -->
+        <collision name='collision'>
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.3 0.3 0.3</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.7</mu>
+                <mu2>0.7</mu2>
+                <slip1>0.0</slip1>
+                <slip2>0.0</slip2>
+              </ode>
+            </friction>
+            <contact>
+              <ode>
+                <soft_cfm>0.0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e13</kp>
+                <kd>1.0</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0.0</min_depth>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+        
+        <!-- ===== INERTIAL (Mass and Moment) ===== -->
+        <inertial>
+          <mass>5.0</mass>
+          <pose>0 0 0 0 0 0</pose>
+          <inertia>
+            <ixx>0.04167</ixx>
+            <iyy>0.04167</iyy>
+            <izz>0.04167</izz>
+            <ixy>0.0</ixy>
+            <ixz>0.0</ixz>
+            <iyz>0.0</iyz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
   </world>
 </sdf>

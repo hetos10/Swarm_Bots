@@ -14,18 +14,10 @@
 
       <collision>
         <!-- Cylinder axis along X (wheel rotation axis) -->
-        <origin rpy="1.5708 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <cylinder radius="0.05" length="0.04"/>
+            <sphere radius="0.05"/> 
         </geometry>
-        <surface>
-          <friction>
-            <ode>
-              <mu>2.0</mu>
-              <mu2>2.0</mu2>
-            </ode>
-          </friction>
-        </surface>
       </collision>
 
       <inertial>
@@ -48,6 +40,7 @@
       <origin xyz="0 ${offset} 0"/>
       <!-- Rotation around X axis -->
       <axis xyz="0 ${axis}  0"/>
+      <limit effort="100.0" velocity="40.0" />
     </joint>
 
   </xacro:macro>

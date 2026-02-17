@@ -11,24 +11,45 @@
 
     <!-- ================= MECANUM WHEELS ================= -->
     <gazebo reference="wheel_fl">
-      <mu1>2.0</mu1>
-      <mu2>2.0</mu2>
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+        <kp>100000.0</kp>
+        <kd>10.0</kd>
+        <minDepth>0.001</minDepth>
+        <maxVel>0.1</maxVel>
+        <fdir1>1 0 0</fdir1>
     </gazebo>
 
     <gazebo reference="wheel_fr">
-      <mu1>2.0</mu1>
-      <mu2>2.0</mu2>
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+        <kp>100000.0</kp>
+        <kd>10.0</kd>
+        <minDepth>0.001</minDepth>
+        <maxVel>0.1</maxVel>
+        <fdir1>1 0 0</fdir1>
     </gazebo>
 
     <gazebo reference="wheel_bl">
-      <mu1>2.0</mu1>
-      <mu2>2.0</mu2>
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+        <kp>100000.0</kp>
+        <kd>10.0</kd>
+        <minDepth>0.001</minDepth>
+        <maxVel>0.1</maxVel>
+        <fdir1>1 0 0</fdir1>
     </gazebo>
 
     <gazebo reference="wheel_br">
-      <mu1>2.0</mu1>
-      <mu2>2.0</mu2>
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+        <kp>100000.0</kp>
+        <kd>10.0</kd>
+        <minDepth>0.001</minDepth>
+        <maxVel>0.1</maxVel>
+        <fdir1>1 0 0</fdir1>
     </gazebo>
+
 
     <!-- ================= ACTUATOR LINKS ================= -->
     <gazebo reference="piston_base"/>
@@ -44,9 +65,12 @@
 
     <!-- ================= ROS2 CONTROL (REQUIRED) ================= -->
     <gazebo>
-        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-            <parameters>$(find sr_control)/config/runner_config.yaml</parameters>
-        </plugin>
+      <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <ros>
+          <namespace>$(arg namespace)</namespace>
+        </ros>
+        <parameters>$(find sr_control)/config/runner_config.yaml</parameters>
+      </plugin>
     </gazebo>
 
   </xacro:macro>

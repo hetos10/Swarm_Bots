@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="runner_bot">
+  <xacro:arg name="namespace" default=""/>
 
   <xacro:include filename="$(find sr_description)/urdf/material.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/base.urdf.xacro"/>

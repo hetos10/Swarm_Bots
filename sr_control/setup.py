@@ -14,6 +14,8 @@ setup(
         ('share/sr_control/config', ['config/lifter_config.yaml']),
         ('share/sr_control/launch', ['launch/runner_control.launch.py']),
         ('share/sr_control/config', ['config/runner_config.yaml']),
+        ('share/sr_control/config', ['config/bridge.yaml']),
+
     ],
     install_requires=['setuptools'],
     zip_safe=True,

@@ -13,10 +13,13 @@ def generate_launch_description():
     
     sr_gazebo_pkg= os.path.join(get_package_share_directory('sr_gazebo'))
     sr_description_pkg= os.path.join(get_package_share_directory('sr_description'))
+    sr_control_pkg= os.path.join(get_package_share_directory('sr_control'))
 
     xacro_file = os.path.join(sr_description_pkg,'urdf','lifter_bot.urdf.xacro')
     rviz_config_file = os.path.join(sr_description_pkg,'rviz','view.rviz')
     world_path = os.path.join(sr_gazebo_pkg, 'worlds', 'empty.sdf')
+    ros2_gz_bridge_config = os.path.join(sr_control_pkg,'config','bridge.yaml')
+
     description_params_file = {
     "robot_description": ParameterValue(
         Command(['xacro ', xacro_file]),
@@ -34,6 +37,13 @@ def generate_launch_description():
                         "gz_args": PythonExpression(["'", world_path, " -v 4 -r'"])
                     }.items()
                 )
+
+    gazebo_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=['--ros-args','-p',f'config_file:={ros2_gz_bridge_config}'],
+        output="screen",
+    )
 
     gz_spawn_entity = Node(
         package="ros_gz_sim",
@@ -58,6 +68,10 @@ def generate_launch_description():
                 executable="ros2_control_node",
                 parameters=[controller_params_file],
                 output="both",
+                remappings=[
+                    ("~/robot_description", "/robot_description"),
+                    ("/mecanum_controller/reference", "/cmd_vel"),
+                ]
             )
         ]
     )
@@ -113,9 +127,10 @@ def generate_launch_description():
 
     nodes = [
         gazebo,
+        gazebo_bridge,
         node_robot_state_publisher, 
         gz_spawn_entity, 
-        control_node,
+        # control_node,
         joint_state_broadcaster_spawner,
         mecanum_controller_spawner,
         arm_controller_spawner,
