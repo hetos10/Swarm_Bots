@@ -16,16 +16,17 @@ def generate_launch_description():
     lifter_xacro = os.path.join(sr_description_pkg, 'urdf', 'lifter_bot.urdf.xacro')
     runner_xacro = os.path.join(sr_description_pkg, 'urdf', 'runner_bot.urdf.xacro')
     
+    robot_scale = "5 5 5"
     # 8 Robot Configuration
     robot_configs = [
-        {'name': 'lifter1', 'ns': 'lifter1', 'xacro': lifter_xacro, 'x': '-3.5', 'y': '-2.0'},
-        {'name': 'lifter2', 'ns': 'lifter2', 'xacro': lifter_xacro, 'x': '-1.5', 'y': '-2.0'},
-        {'name': 'lifter3', 'ns': 'lifter3', 'xacro': lifter_xacro, 'x': '-3.5', 'y': '2.0'},
-        {'name': 'lifter4', 'ns': 'lifter4', 'xacro': lifter_xacro, 'x': '-1.5', 'y': '2.0'},
-        {'name': 'runner1', 'ns': 'runner1', 'xacro': runner_xacro, 'x': '1.5', 'y': '-2.0'},
-        {'name': 'runner2', 'ns': 'runner2', 'xacro': runner_xacro, 'x': '3.5', 'y': '-2.0'},
-        {'name': 'runner3', 'ns': 'runner3', 'xacro': runner_xacro, 'x': '1.5', 'y': '2.0'},
-        {'name': 'runner4', 'ns': 'runner4', 'xacro': runner_xacro, 'x': '3.5', 'y': '2.0'},
+        {'name': 'lifter1', 'ns': 'lifter1', 'xacro': lifter_xacro, 'x': '-4.5', 'y': '4.0'},
+        {'name': 'lifter2', 'ns': 'lifter2', 'xacro': lifter_xacro, 'x': '-3.5', 'y': '4.0'},
+        {'name': 'lifter3', 'ns': 'lifter3', 'xacro': lifter_xacro, 'x': '-4.5', 'y': '3.0'},
+        {'name': 'lifter4', 'ns': 'lifter4', 'xacro': lifter_xacro, 'x': '-3.5', 'y': '3.0'},
+        {'name': 'runner1', 'ns': 'runner1', 'xacro': runner_xacro, 'x': '-4.5', 'y': '-4.0'},
+        {'name': 'runner2', 'ns': 'runner2', 'xacro': runner_xacro, 'x': '-3.5', 'y': '-4.0'},
+        {'name': 'runner3', 'ns': 'runner3', 'xacro': runner_xacro, 'x': '-4.5', 'y': '-3.0'},
+        {'name': 'runner4', 'ns': 'runner4', 'xacro': runner_xacro, 'x': '-3.5', 'y': '-3.0'},
     ]
 
     gazebo = IncludeLaunchDescription(
@@ -62,7 +63,8 @@ def generate_launch_description():
             arguments=[
                 "-topic", f"/{ns}/robot_description",
                 "-name", robot['name'],
-                "-x", robot['x'], "-y", robot['y'], "-z", "0.2"
+                "-x", robot['x'], "-y", robot['y'], "-z", "0.2",
+                "-scale", robot_scale
             ]
         )
 
@@ -87,4 +89,20 @@ def generate_launch_description():
 
         nodes_list.extend([rsp, spawn, jsb, mecanum])
 
+        if 'lifter' in robot['name']:
+            specific_controller = 'arm_controller'
+        else:
+            specific_controller = 'piston_controller'
+
+        extra_controller_spawner = TimerAction(
+            period=delay + 7.0,
+            actions=[Node(
+                package='controller_manager',
+                executable='spawner',
+                arguments=[specific_controller, '-c', f'/{ns}/controller_manager'],
+                output='screen'
+            )]
+        )
+        nodes_list.append(extra_controller_spawner)
+        
     return LaunchDescription([gazebo] + nodes_list)

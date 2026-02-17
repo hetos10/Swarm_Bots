@@ -1,4 +1,4 @@
-controller_manager:
+/**/controller_manager:
   ros__parameters:
     update_rate: 100
 
@@ -12,7 +12,7 @@ controller_manager:
       type: joint_trajectory_controller/JointTrajectoryController
 
 
-mecanum_controller:
+/**/mecanum_controller:
   ros__parameters:
     front_left_wheel_command_joint_name: wheel_fl_joint
     front_right_wheel_command_joint_name: wheel_fr_joint
@@ -56,7 +56,7 @@ mecanum_controller:
     angular.z.max_jerk: 0.0
     angular.z.min_jerk: 0.0
 
-arm_controller:
+/**/arm_controller:
   ros__parameters:
     joints:
       - arm_joint_1

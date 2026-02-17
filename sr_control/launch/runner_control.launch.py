@@ -15,7 +15,7 @@ def generate_launch_description():
     sr_description_pkg= os.path.join(get_package_share_directory('sr_description'))
 
     xacro_file = os.path.join(sr_description_pkg,'urdf','runner_bot.urdf.xacro')
-    rviz_config_file = os.path.join(sr_description_pkg,'rviz','view.rviz')
+    rviz_config_file = os.path.join(sr_description_pkg,'rviz','runner.rviz')
     world_path = os.path.join(sr_gazebo_pkg, 'worlds', 'empty.sdf')
     description_params_file= {
         "robot_description": ParameterValue(
@@ -106,7 +106,7 @@ def generate_launch_description():
         executable="rviz2",
         name="rviz2",
         output="log",
-        # arguments=["-d", rviz_config_file],
+        arguments=["-d", rviz_config_file],
     )
 
     nodes = [

@@ -16,7 +16,7 @@ def generate_launch_description():
     sr_control_pkg= os.path.join(get_package_share_directory('sr_control'))
 
     xacro_file = os.path.join(sr_description_pkg,'urdf','lifter_bot.urdf.xacro')
-    rviz_config_file = os.path.join(sr_description_pkg,'rviz','view.rviz')
+    rviz_config_file = os.path.join(sr_description_pkg,'rviz','lifter.rviz')
     world_path = os.path.join(sr_gazebo_pkg, 'worlds', 'empty.sdf')
     ros2_gz_bridge_config = os.path.join(sr_control_pkg,'config','bridge.yaml')
 
@@ -122,7 +122,7 @@ def generate_launch_description():
         executable="rviz2",
         name="rviz2",
         output="log",
-        # arguments=["-d", rviz_config_file],
+        arguments=["-d", rviz_config_file],
     )
 
     nodes = [

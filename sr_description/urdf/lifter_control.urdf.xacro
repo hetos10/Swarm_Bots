@@ -53,12 +53,15 @@
 
     <joint name="arm_joint_1">
       <command_interface name="position"/>
+      <command_interface name="velocity"/>
+
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
 
     <joint name="arm_joint_2">
       <command_interface name="position"/>
+      <command_interface name="velocity"/>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
