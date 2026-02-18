@@ -15,6 +15,8 @@ setup(
         ('share/sr_control/launch', ['launch/runner_control.launch.py']),
         ('share/sr_control/config', ['config/runner_config.yaml']),
         ('share/sr_control/config', ['config/bridge.yaml']),
+        ('share/sr_control/launch', ['launch/one_pair.launch.py']),
+
 
     ],
     install_requires=['setuptools'],
@@ -23,12 +25,13 @@ setup(
     maintainer_email='hetchauhan22@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
-    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'goal_controller = sr_control.goal_controller:main',
             'arm_controller = sr_control.arm_controller:main',
             'piston_controller = sr_control.piston_controller:main',
+            'swarm_control = sr_control.swarm_control:main',
+
            
         ],
     },

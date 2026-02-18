@@ -16,7 +16,7 @@
         <!-- Cylinder axis along X (wheel rotation axis) -->
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-            <sphere radius="0.05"/> 
+          <mesh filename="package://sr_description/meshes/${mesh}" scale="0.0018 0.0018 0.0018"/>
         </geometry>
       </collision>
 
@@ -53,7 +53,7 @@
       name="wheel_fl"
       mesh="mecanum_wheel_left.stl"
       shaft_link="shaft_fl"
-      offset="0.05"
+      offset="0.1"
       axis="1"/>
 
     <!-- Front Right -->
@@ -61,7 +61,7 @@
       name="wheel_fr"
       mesh="mecanum_wheel_right.stl"
       shaft_link="shaft_fr"
-      offset="0.05"
+      offset="0.1"
       axis="-1"/>
 
     <!-- Back Left -->
@@ -69,7 +69,7 @@
       name="wheel_bl"
       mesh="mecanum_wheel_right.stl"
       shaft_link="shaft_bl"
-      offset="0.05"
+      offset="0.1"
       axis="1"/>
 
     <!-- Back Right -->
@@ -77,7 +77,7 @@
       name="wheel_br"
       mesh="mecanum_wheel_left.stl"
       shaft_link="shaft_br"
-      offset="0.05"
+      offset="0.1"
       axis="-1"/>
 
   </xacro:macro>

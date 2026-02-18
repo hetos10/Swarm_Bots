@@ -48,6 +48,12 @@
                 scale="0.002 0.002 0.002"/>
         </geometry>
       </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
+                scale="0.002 0.002 0.002"/>
+        </geometry>
+      </collision>
     </link>
 
     <joint name="shaft_fl_joint" type="fixed">
@@ -64,6 +70,12 @@
                 scale="0.002 0.002 0.002"/>
         </geometry>
       </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
+                scale="0.002 0.002 0.002"/>
+        </geometry>
+      </collision>
     </link>
 
     <joint name="shaft_fr_joint" type="fixed">
@@ -80,6 +92,12 @@
                 scale="0.002 0.002 0.002"/>
         </geometry>
       </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
+                scale="0.002 0.002 0.002"/>
+        </geometry>
+      </collision>
     </link>
 
     <joint name="shaft_bl_joint" type="fixed">
@@ -96,6 +114,12 @@
                 scale="0.002 0.002 0.002"/>
         </geometry>
       </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
+                scale="0.002 0.002 0.002"/>
+        </geometry>
+      </collision>
     </link>
 
     <joint name="shaft_br_joint" type="fixed">

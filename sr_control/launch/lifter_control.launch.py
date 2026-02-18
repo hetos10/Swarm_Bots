@@ -61,7 +61,7 @@ def generate_launch_description():
     
     
     control_node = TimerAction(
-        period=5.0,  # wait 2 seconds for robot_description to be published
+        period=2.0,  # wait 2 seconds for robot_description to be published
         actions=[
             Node(
                 package="controller_manager",
@@ -96,7 +96,7 @@ def generate_launch_description():
     )
     
     mecanum_controller_spawner = TimerAction(
-        period=12.0,
+        period=6.0,
         actions=[
             Node(
                 package='controller_manager',
@@ -107,7 +107,7 @@ def generate_launch_description():
         ]
     )
     arm_controller_spawner = TimerAction(
-        period=15.0,
+        period=8.0,
         actions=[
             Node(
                 package='controller_manager',

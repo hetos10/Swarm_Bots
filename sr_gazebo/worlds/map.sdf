@@ -22,10 +22,7 @@
       name="gz::sim::systems::Sensors">
       <render_engine>ogre</render_engine>
     </plugin>
-    <plugin
-      filename="libignition_link_attacher.so"
-      name="ignition_link_attacher">
-    </plugin>
+    <plugin name="ros2_linkattacher" filename="libros2_linkattacher.so"/>
     <scene>
       <grid>false</grid>
       <ambient>0.1 0.1 0.2</ambient>
@@ -132,7 +129,7 @@
         
         <!-- ===== INERTIAL (Mass and Moment) ===== -->
         <inertial>
-          <mass>5.0</mass>
+          <mass>0.1</mass>
           <pose>0 0 0 0 0 0</pose>
           <inertia>
             <ixx>0.04167</ixx>
@@ -201,7 +198,7 @@
         
         <!-- ===== INERTIAL (Mass and Moment) ===== -->
         <inertial>
-          <mass>5.0</mass>
+          <mass>0.1</mass>
           <pose>0 0 0 0 0 0</pose>
           <inertia>
             <ixx>0.04167</ixx>
@@ -270,7 +267,7 @@
         
         <!-- ===== INERTIAL (Mass and Moment) ===== -->
         <inertial>
-          <mass>5.0</mass>
+          <mass>0.1</mass>
           <pose>0 0 0 0 0 0</pose>
           <inertia>
             <ixx>0.04167</ixx>
@@ -339,7 +336,7 @@
         
         <!-- ===== INERTIAL (Mass and Moment) ===== -->
         <inertial>
-          <mass>5.0</mass>
+          <mass>0.1</mass>
           <pose>0 0 0 0 0 0</pose>
           <inertia>
             <ixx>0.04167</ixx>
