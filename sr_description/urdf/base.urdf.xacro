@@ -11,7 +11,7 @@
       <visual>
         <origin xyz="0 0 0"/>
         <geometry>
-          <box size="0.44 0.36 0.1"/>
+          <box size="0.40 0.32 0.1"/>
         </geometry>
         <material name="grey"/>
       </visual>
@@ -19,7 +19,7 @@
       <collision>
         <origin xyz="0 0 0"/>
         <geometry>
-          <box size="0.44 0.36 0.1"/>
+          <box size="0.40 0.32 0.1"/>
         </geometry>
       </collision>
 
@@ -36,96 +36,6 @@
       <parent link="base_footprint"/>
       <child link="base_link"/>
       <origin xyz="0 0 0.05"/>
-    </joint>
-
-    <!-- ================= SHAFT LINKS ================= -->
-
-    <!-- Shaft FL -->
-    <link name="shaft_fl">
-      <visual>
-        <geometry>
-          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
-                scale="0.002 0.002 0.002"/>
-        </geometry>
-      </visual>
-      <collision>
-        <geometry>
-          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
-                scale="0.002 0.002 0.002"/>
-        </geometry>
-      </collision>
-    </link>
-
-    <joint name="shaft_fl_joint" type="fixed">
-      <parent link="base_link"/>
-      <child link="shaft_fl"/>
-      <origin xyz="0.20 0.18 0.0"/>
-    </joint>
-
-    <!-- Shaft FR -->
-    <link name="shaft_fr">
-      <visual>
-        <geometry>
-          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
-                scale="0.002 0.002 0.002"/>
-        </geometry>
-      </visual>
-      <collision>
-        <geometry>
-          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
-                scale="0.002 0.002 0.002"/>
-        </geometry>
-      </collision>
-    </link>
-
-    <joint name="shaft_fr_joint" type="fixed">
-      <parent link="base_link"/>
-      <child link="shaft_fr"/>
-      <origin xyz="0.20 -0.18 0.0" rpy="0 0 3.1416"/>
-    </joint>
-
-    <!-- Shaft BL -->
-    <link name="shaft_bl">
-      <visual>
-        <geometry>
-          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
-                scale="0.002 0.002 0.002"/>
-        </geometry>
-      </visual>
-      <collision>
-        <geometry>
-          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
-                scale="0.002 0.002 0.002"/>
-        </geometry>
-      </collision>
-    </link>
-
-    <joint name="shaft_bl_joint" type="fixed">
-      <parent link="base_link"/>
-      <child link="shaft_bl"/>
-      <origin xyz="-0.20 0.18 0.0"/>
-    </joint>
-
-    <!-- Shaft BR -->
-    <link name="shaft_br">
-      <visual>
-        <geometry>
-          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
-                scale="0.002 0.002 0.002"/>
-        </geometry>
-      </visual>
-      <collision>
-        <geometry>
-          <mesh filename="package://sr_description/meshes/wheel_shaft.stl"
-                scale="0.002 0.002 0.002"/>
-        </geometry>
-      </collision>
-    </link>
-
-    <joint name="shaft_br_joint" type="fixed">
-      <parent link="base_link"/>
-      <child link="shaft_br"/>
-      <origin xyz="-0.20 -0.18 0.0" rpy="0 0 3.1416"/>
     </joint>
 
     <!-- ================= ARM MOUNT ================= -->

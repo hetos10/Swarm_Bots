@@ -136,7 +136,7 @@ def generate_launch_description():
             "-name", "lifter1",
             "-x", "-4.5",
             "-y", "4.0",
-            "-z", "0.2"
+            "-z", "0.05"
         ],
     )
 
@@ -149,7 +149,7 @@ def generate_launch_description():
             "-name", "runner1",
             "-x", "-4.5",
             "-y", "-4.0",
-            "-z", "0.2"
+            "-z", "0.05"
         ],
     )
 

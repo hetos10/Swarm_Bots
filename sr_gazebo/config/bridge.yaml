@@ -1,114 +1,41 @@
 # ==========================================
-# LIFTER 1 (Wheels + Arm)
+# LIFTER 1
 # ==========================================
 
-# Wheels
-- ros_type_name: "std_msgs/msg/Float64"
-  ros_topic_name: "/lifter1/cmd_wheel_fl"
-  gz_topic_name: "/lifter1/cmd_wheel_fl"
-  gz_type_name: "gz.msgs.Double"
+- ros_type_name: "geometry_msgs/msg/Twist"
+  ros_topic_name: "/lifter1/cmd_vel"
+  gz_topic_name: "/lifter1/cmd_vel"
+  gz_type_name: "ignition.msgs.Twist"
   direction: ROS_TO_GZ
-  
 
-- ros_type_name: "std_msgs/msg/Float64"
-  ros_topic_name: "/lifter1/cmd_wheel_fr"
-  gz_topic_name: "/lifter1/cmd_wheel_fr"
-  gz_type_name: "gz.msgs.Double"
-  direction: ROS_TO_GZ
-  
-
-- ros_type_name: "std_msgs/msg/Float64"
-  ros_topic_name: "/lifter1/cmd_wheel_bl"
-  gz_topic_name: "/lifter1/cmd_wheel_bl"
-  gz_type_name: "gz.msgs.Double"
-  direction: ROS_TO_GZ
-  
-
-- ros_type_name: "std_msgs/msg/Float64"
-  ros_topic_name: "/lifter1/cmd_wheel_br"
-  gz_topic_name: "/lifter1/cmd_wheel_br"
-  gz_type_name: "gz.msgs.Double"
-  direction: ROS_TO_GZ
-  
-
-# Arm Joints (Shoulder and Elbow)
-- ros_type_name: "std_msgs/msg/Float64"
-  ros_topic_name: "/lifter1/cmd_shoulder"
-  gz_topic_name: "/lifter1/cmd_shoulder"
-  gz_type_name: "gz.msgs.Double"
-  direction: ROS_TO_GZ
-  
-
-- ros_type_name: "std_msgs/msg/Float64"
-  ros_topic_name: "/lifter1/cmd_elbow"
-  gz_topic_name: "/lifter1/cmd_elbow"
-  gz_type_name: "gz.msgs.Double"
-  direction: ROS_TO_GZ
-  
-
-# Lifter Odometry
 - ros_type_name: "nav_msgs/msg/Odometry"
   ros_topic_name: "/lifter1/odom"
   gz_topic_name: "/lifter1/odom"
-  gz_type_name: "gz.msgs.Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
   direction: GZ_TO_ROS
-  
 
 # ==========================================
-# RUNNER 1 (Wheels + Piston)
+# RUNNER 1
 # ==========================================
 
-# Wheels
-- ros_type_name: "std_msgs/msg/Float64"
-  ros_topic_name: "/runner1/cmd_wheel_fl"
-  gz_topic_name: "/runner1/cmd_wheel_fl"
-  gz_type_name: "gz.msgs.Double"
+- ros_type_name: "geometry_msgs/msg/Twist"
+  ros_topic_name: "/runner1/cmd_vel"
+  gz_topic_name: "/runner1/cmd_vel"
+  gz_type_name: "ignition.msgs.Twist"
   direction: ROS_TO_GZ
-  
 
-- ros_type_name: "std_msgs/msg/Float64"
-  ros_topic_name: "/runner1/cmd_wheel_fr"
-  gz_topic_name: "/runner1/cmd_wheel_fr"
-  gz_type_name: "gz.msgs.Double"
-  direction: ROS_TO_GZ
-  
-
-- ros_type_name: "std_msgs/msg/Float64"
-  ros_topic_name: "/runner1/cmd_wheel_bl"
-  gz_topic_name: "/runner1/cmd_wheel_bl"
-  gz_type_name: "gz.msgs.Double"
-  direction: ROS_TO_GZ
-  
-
-- ros_type_name: "std_msgs/msg/Float64"
-  ros_topic_name: "/runner1/cmd_wheel_br"
-  gz_topic_name: "/runner1/cmd_wheel_br"
-  gz_type_name: "gz.msgs.Double"
-  direction: ROS_TO_GZ
-  
-
-# Piston Joint
-- ros_type_name: "std_msgs/msg/Float64"
-  ros_topic_name: "/runner1/cmd_piston"
-  gz_topic_name: "/runner1/cmd_piston"
-  gz_type_name: "gz.msgs.Double"
-  direction: ROS_TO_GZ
-  
-
-# Runner Odometry
 - ros_type_name: "nav_msgs/msg/Odometry"
   ros_topic_name: "/runner1/odom"
   gz_topic_name: "/runner1/odom"
-  gz_type_name: "gz.msgs.Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
   direction: GZ_TO_ROS
-  
 
 # ==========================================
 # SYSTEM
 # ==========================================
+
 - ros_type_name: "rosgraph_msgs/msg/Clock"
   ros_topic_name: "/clock"
   gz_topic_name: "/clock"
-  gz_type_name: "gz.msgs.Clock"
+  gz_type_name: "ignition.msgs.Clock"
   direction: GZ_TO_ROS
-  

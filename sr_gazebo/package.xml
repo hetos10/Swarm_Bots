@@ -14,6 +14,7 @@
   <exec_depend>xacro</exec_depend>
   <exec_depend>sr_description</exec_depend>
   <exec_depend>ros2_linkattacher</exec_depend>
+  <exec_depend>ros_ign_bridge</exec_depend>
 
 
 

@@ -47,39 +47,41 @@
         <maxVel>0.1</maxVel>
         <fdir1>1 1 0</fdir1>
     </gazebo>
-
+    <!-- Joint State Publisher -->
     <gazebo>
-      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
-        <joint_name>wheel_fl_joint</joint_name>
-        <topic>/${robot_ns}/cmd_wheel_fl</topic>
-      </plugin>
-      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
-        <joint_name>wheel_fr_joint</joint_name>
-        <topic>/${robot_ns}/cmd_wheel_fr</topic>
-      </plugin>
-      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
-        <joint_name>wheel_bl_joint</joint_name>
-        <topic>/${robot_ns}/cmd_wheel_bl</topic>
-      </plugin>
-      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
-        <joint_name>wheel_br_joint</joint_name>
-        <topic>/${robot_ns}/cmd_wheel_br</topic>
+      <plugin filename="libignition-gazebo6-joint-state-publisher-system.so" name="ignition::gazebo::systems::JointStatePublisher">
       </plugin>
     </gazebo>
 
+    <!-- Mecanum Drive Plugin - Handles all wheels and kinematics! -->
     <gazebo>
-      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+      <plugin filename="libignition-gazebo6-mecanum-drive-system.so" name="ignition::gazebo::systems::MecanumDrive">
+        <front_left_joint>wheel_fl_joint</front_left_joint>
+        <front_right_joint>wheel_fr_joint</front_right_joint>
+        <back_left_joint>wheel_bl_joint</back_left_joint>
+        <back_right_joint>wheel_br_joint</back_right_joint>
+        <wheel_separation>0.4</wheel_separation>
+        <wheel_diameter>0.2</wheel_diameter>
+        <max_linear_speed>5.0</max_linear_speed>
+        <max_angular_speed>5.0</max_angular_speed>
+        <topic>${robot_ns}/cmd_vel</topic>
+      </plugin>
+    </gazebo>
+
+    
+    <gazebo>
+      <plugin filename="libignition-gazebo6-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
         <joint_name>piston_rod_joint</joint_name>
         <topic>/${robot_ns}/cmd_piston</topic>
       </plugin>
     </gazebo>
 
     <gazebo>
-      <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
-        <odom_frame>odom</odom_frame>
-        <robot_base_frame>${robot_ns}/base_footprint</robot_base_frame>
-        <odom_topic>/${robot_ns}/odom</odom_topic>
-        <tf_topic>/${robot_ns}/tf</tf_topic>
+      <plugin filename="libignition-gazebo6-odometry-publisher-system.so" name="ignition::gazebo::systems::OdometryPublisher">
+        <body_name>base_link</body_name>
+        <odom_publish_frequency>100</odom_publish_frequency>
+        <odom_topic>${robot_ns}/odom</odom_topic>
+        <tf_topic>${robot_ns}/tf</tf_topic>
       </plugin>
     </gazebo>
 
