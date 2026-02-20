@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="runner_bot">
-  <xacro:arg name="namespace" default=""/>
 
   <xacro:include filename="$(find sr_description)/urdf/material.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/base.urdf.xacro"/>
@@ -8,14 +7,12 @@
   <xacro:include filename="$(find sr_description)/urdf/actuator.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/wall.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/runner_gazebo.urdf.xacro"/>
-  <xacro:include filename="$(find sr_description)/urdf/runner_control.urdf.xacro"/>
-
-
 
   <xacro:create_base/>
   <xacro:create_wheels/>
   <xacro:create_wall/>
   <xacro:create_piston/>
-  <xacro:gazebo_setup_run/>
+  
+  <xacro:gazebo_setup_run />
 
 </robot>

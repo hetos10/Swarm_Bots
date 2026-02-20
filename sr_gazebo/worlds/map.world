@@ -22,7 +22,7 @@
       name="gz::sim::systems::Sensors">
       <render_engine>ogre</render_engine>
     </plugin>
-    <plugin name="ros2_linkattacher" filename="libros2_linkattacher.so"/>
+    <plugin name="ros2_linkattacher" filename="libgazebo_link_attacher.so"/>
     <scene>
       <grid>false</grid>
       <ambient>0.1 0.1 0.2</ambient>

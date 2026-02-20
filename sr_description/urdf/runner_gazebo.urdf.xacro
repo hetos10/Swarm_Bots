@@ -64,14 +64,7 @@
 
 
     <!-- ================= ROS2 CONTROL (REQUIRED) ================= -->
-    <gazebo>
-      <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-        <ros>
-          <namespace>$(arg namespace)</namespace>
-        </ros>
-        <parameters>$(find sr_control)/config/runner_config.yaml</parameters>
-      </plugin>
-    </gazebo>
+
 
   </xacro:macro>
 

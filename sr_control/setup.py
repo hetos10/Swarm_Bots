@@ -10,12 +10,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/sr_control/launch', ['launch/lifter_control.launch.py']),
-        ('share/sr_control/config', ['config/lifter_config.yaml']),
-        ('share/sr_control/launch', ['launch/runner_control.launch.py']),
-        ('share/sr_control/config', ['config/runner_config.yaml']),
-        ('share/sr_control/config', ['config/bridge.yaml']),
-        ('share/sr_control/launch', ['launch/one_pair.launch.py']),
+    
 
 
     ],
@@ -27,12 +22,7 @@ setup(
     license='TODO: License declaration',
     entry_points={
         'console_scripts': [
-            'goal_controller = sr_control.goal_controller:main',
-            'arm_controller = sr_control.arm_controller:main',
-            'piston_controller = sr_control.piston_controller:main',
             'swarm_control = sr_control.swarm_control:main',
-
-           
         ],
     },
 )
