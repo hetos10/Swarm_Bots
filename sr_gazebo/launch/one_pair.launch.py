@@ -17,6 +17,11 @@ def generate_launch_description():
 
     sr_description = get_package_share_directory("sr_description")
     sr_gazebo = get_package_share_directory("sr_gazebo")
+    ros2_gz_bridge_config = os.path.join(
+        get_package_share_directory('sr_gazebo'), # Change to your package name
+        'config',
+        'bridge.yaml'
+    )
 
     # -------------------------------
     # Launch Arguments
@@ -149,16 +154,17 @@ def generate_launch_description():
     )
 
     # -------------------------------
-    # Clock Bridge
+    # Gz-ROS Bridge
     # -------------------------------
-    clock_bridge = Node(
-        package="ros_gz_bridge",
-        executable="parameter_bridge",
-        arguments=[
-            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock"
-        ],
-        output="screen"
-    )
+    gz_ros2_bridge = Node(
+            package="ros_gz_bridge",
+            executable="parameter_bridge",
+            arguments=[
+                '--ros-args', 
+                '-p', f'config_file:={ros2_gz_bridge_config}'
+            ],
+            output="screen",
+        )
 
     return LaunchDescription([
         model_arg1,
@@ -170,5 +176,5 @@ def generate_launch_description():
         gazebo,
         spawn_lifter,
         spawn_runner,
-        clock_bridge,
+        gz_ros2_bridge,
     ])

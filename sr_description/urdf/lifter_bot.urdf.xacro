@@ -11,6 +11,6 @@
   <xacro:create_wheels/>
   <xacro:create_arm/>
   
-  <xacro:gazebo_setup_lift />
+  <xacro:gazebo_setup_lift robot_ns="lifter1" />
 
 </robot>

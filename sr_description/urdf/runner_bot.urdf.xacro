@@ -13,6 +13,6 @@
   <xacro:create_wall/>
   <xacro:create_piston/>
   
-  <xacro:gazebo_setup_run />
+  <xacro:gazebo_setup_run robot_ns="runner1"/>
 
 </robot>

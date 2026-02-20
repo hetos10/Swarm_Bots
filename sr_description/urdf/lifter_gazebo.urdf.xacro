@@ -1,15 +1,13 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="gazebo_setup_lift">
+  <xacro:macro name="gazebo_setup_lift" params="robot_ns">
 
-    <!-- ================= BASE ================= -->
     <gazebo reference="base_link">
-      <mu1>0</mu1>
-      <mu2>0</mu2>
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
     </gazebo>
 
-    <!-- ================= MECANUM WHEELS ================= -->
     <gazebo reference="wheel_fl">
         <mu1>10.0</mu1>
         <mu2>10.0</mu2>
@@ -50,27 +48,57 @@
         <fdir1>1 1 0</fdir1>
     </gazebo>
 
-    <!-- ================= ARM LINKS ================= -->
+    <gazebo>
+      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+        <joint_name>wheel_fl_joint</joint_name>
+        <topic>/${robot_ns}/cmd_wheel_fl</topic>
+      </plugin>
+      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+        <joint_name>wheel_fr_joint</joint_name>
+        <topic>/${robot_ns}/cmd_wheel_fr</topic>
+      </plugin>
+      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+        <joint_name>wheel_bl_joint</joint_name>
+        <topic>/${robot_ns}/cmd_wheel_bl</topic>
+      </plugin>
+      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+        <joint_name>wheel_br_joint</joint_name>
+        <topic>/${robot_ns}/cmd_wheel_br</topic>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+        <joint_name>arm_joint_1</joint_name>
+        <topic>/${robot_ns}/cmd_shoulder</topic>
+      </plugin>
+      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+        <joint_name>arm_joint_2</joint_name>
+        <topic>/${robot_ns}/cmd_elbow</topic>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
+        <odom_frame>odom</odom_frame>
+        <robot_base_frame>${robot_ns}/base_footprint</robot_base_frame>
+        <odom_topic>/${robot_ns}/odom</odom_topic>
+        <tf_topic>/${robot_ns}/tf</tf_topic>
+      </plugin>
+    </gazebo>
+
     <gazebo reference="arm_base_link"/>
-    <gazebo reference="arm_shoulder_link"/>
-    <gazebo reference="arm_elbow_link"/>
-    <gazebo reference="arm_wrist_link"/>
-    <gazebo reference="gripper_link"/>
+    <gazebo reference="arm_joint_1"/>
+    <gazebo reference="arm_joint_2"/>
 
-    <!-- ================= ARM JOINT DYNAMICS ================= -->
-    <gazebo reference="shoulder_joint">
+    <gazebo reference="arm_joint_1">
       <implicitSpringDamper>true</implicitSpringDamper>
     </gazebo>
 
-    <gazebo reference="elbow_joint">
-      <implicitSpringDamper>true</implicitSpringDamper>
-    </gazebo>
-
-    <gazebo reference="wrist_joint">
+    <gazebo reference="arm_joint_2">
       <implicitSpringDamper>true</implicitSpringDamper>
     </gazebo>
 
 
   </xacro:macro>
-
 </robot>

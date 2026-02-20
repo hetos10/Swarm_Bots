@@ -1,53 +1,86 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="gazebo_setup_run">
+  <xacro:macro name="gazebo_setup_run" params="robot_ns">
 
-    <!-- ================= BASE ================= -->
     <gazebo reference="base_link">
-      <mu1>0.3</mu1>
-      <mu2>0.3</mu2>
+      <mu1>0.2</mu1>
+      <mu2>0.2</mu2>
     </gazebo>
 
-    <!-- ================= MECANUM WHEELS ================= -->
     <gazebo reference="wheel_fl">
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
         <kp>100000.0</kp>
         <kd>10.0</kd>
         <minDepth>0.001</minDepth>
         <maxVel>0.1</maxVel>
-        <fdir1>1 0 0</fdir1>
+        <fdir1>1 1 0</fdir1>
     </gazebo>
 
     <gazebo reference="wheel_fr">
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
         <kp>100000.0</kp>
         <kd>10.0</kd>
         <minDepth>0.001</minDepth>
         <maxVel>0.1</maxVel>
-        <fdir1>1 0 0</fdir1>
+        <fdir1>1 -1 0</fdir1>
     </gazebo>
 
     <gazebo reference="wheel_bl">
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
         <kp>100000.0</kp>
         <kd>10.0</kd>
         <minDepth>0.001</minDepth>
         <maxVel>0.1</maxVel>
-        <fdir1>1 0 0</fdir1>
+        <fdir1>1 -1 0</fdir1>
     </gazebo>
 
     <gazebo reference="wheel_br">
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
         <kp>100000.0</kp>
         <kd>10.0</kd>
         <minDepth>0.001</minDepth>
         <maxVel>0.1</maxVel>
-        <fdir1>1 0 0</fdir1>
+        <fdir1>1 1 0</fdir1>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+        <joint_name>wheel_fl_joint</joint_name>
+        <topic>/${robot_ns}/cmd_wheel_fl</topic>
+      </plugin>
+      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+        <joint_name>wheel_fr_joint</joint_name>
+        <topic>/${robot_ns}/cmd_wheel_fr</topic>
+      </plugin>
+      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+        <joint_name>wheel_bl_joint</joint_name>
+        <topic>/${robot_ns}/cmd_wheel_bl</topic>
+      </plugin>
+      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+        <joint_name>wheel_br_joint</joint_name>
+        <topic>/${robot_ns}/cmd_wheel_br</topic>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="ignition-gazebo-joint-controller-system" name="ignition::gazebo::systems::JointController">
+        <joint_name>piston_rod_joint</joint_name>
+        <topic>/${robot_ns}/cmd_piston</topic>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
+        <odom_frame>odom</odom_frame>
+        <robot_base_frame>${robot_ns}/base_footprint</robot_base_frame>
+        <odom_topic>/${robot_ns}/odom</odom_topic>
+        <tf_topic>/${robot_ns}/tf</tf_topic>
+      </plugin>
     </gazebo>
 
 
@@ -61,9 +94,6 @@
     <gazebo reference="piston_rod_joint">
       <implicitSpringDamper>true</implicitSpringDamper>
     </gazebo>
-
-
-    <!-- ================= ROS2 CONTROL (REQUIRED) ================= -->
 
 
   </xacro:macro>
