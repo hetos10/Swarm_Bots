@@ -1,4 +1,12 @@
 # ==========================================
+# SYSTEM
+# ==========================================
+- ros_type_name: "rosgraph_msgs/msg/Clock"
+  ros_topic_name: "/clock"
+  gz_topic_name: "/clock"
+  gz_type_name: "ignition.msgs.Clock"
+  direction: GZ_TO_ROS
+# ==========================================
 # LIFTER 1
 # ==========================================
 
@@ -6,13 +14,25 @@
   ros_topic_name: "/lifter1/cmd_vel"
   gz_topic_name: "/lifter1/cmd_vel"
   gz_type_name: "ignition.msgs.Twist"
-  direction: ROS_TO_GZ
+  direction: BIDIRECTIONAL
 
 - ros_type_name: "nav_msgs/msg/Odometry"
   ros_topic_name: "/lifter1/odom"
   gz_topic_name: "/lifter1/odom"
   gz_type_name: "ignition.msgs.Odometry"
-  direction: GZ_TO_ROS
+  direction: BIDIRECTIONAL
+
+- ros_topic_name: "/lifter1/cmd_shoulder"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_topic_name: "/lifter1/cmd_shoulder"
+  gz_type_name: "ignition.msgs.Double"
+  direction: BIDIRECTIONAL
+
+- ros_topic_name: "/lifter1/cmd_elbow"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_topic_name: "/lifter1/cmd_elbow"
+  gz_type_name: "ignition.msgs.Double"
+  direction: BIDIRECTIONAL
 
 # ==========================================
 # RUNNER 1
@@ -22,20 +42,16 @@
   ros_topic_name: "/runner1/cmd_vel"
   gz_topic_name: "/runner1/cmd_vel"
   gz_type_name: "ignition.msgs.Twist"
-  direction: ROS_TO_GZ
+  direction: BIDIRECTIONAL
 
 - ros_type_name: "nav_msgs/msg/Odometry"
   ros_topic_name: "/runner1/odom"
   gz_topic_name: "/runner1/odom"
   gz_type_name: "ignition.msgs.Odometry"
-  direction: GZ_TO_ROS
+  direction: BIDIRECTIONAL
 
-# ==========================================
-# SYSTEM
-# ==========================================
-
-- ros_type_name: "rosgraph_msgs/msg/Clock"
-  ros_topic_name: "/clock"
-  gz_topic_name: "/clock"
-  gz_type_name: "ignition.msgs.Clock"
-  direction: GZ_TO_ROS
+- ros_topic_name: "/runner1/cmd_piston"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_topic_name: "/lifter1/cmd_piston"
+  gz_type_name: "ignition.msgs.Double"
+  direction: BIDIRECTIONAL

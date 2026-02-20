@@ -49,10 +49,10 @@
     </gazebo>
 
     <!-- Joint State Publisher -->
-    <gazebo>
+    <!-- <gazebo>
       <plugin filename="libignition-gazebo6-joint-state-publisher-system.so" name="ignition::gazebo::systems::JointStatePublisher">
       </plugin>
-    </gazebo>
+    </gazebo> -->
 
     <!-- Mecanum Drive Plugin - Handles all wheels and kinematics! -->
     <gazebo>
@@ -74,9 +74,19 @@
         <joint_name>arm_joint_1</joint_name>
         <topic>/${robot_ns}/cmd_shoulder</topic>
       </plugin>
+    </gazebo>
+
+    <gazebo>
       <plugin filename="libignition-gazebo6-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
         <joint_name>arm_joint_2</joint_name>
         <topic>/${robot_ns}/cmd_elbow</topic>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin filename="libignition-gazebo6-joint-state-publisher-system.so" name="ignition::gazebo::systems::JointStatePublisher">
+        <joint_name>arm_joint_1</joint_name>
+        <joint_name>arm_joint_2</joint_name>
       </plugin>
     </gazebo>
 
