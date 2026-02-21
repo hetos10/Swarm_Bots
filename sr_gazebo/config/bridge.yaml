@@ -1,64 +1,110 @@
----
+# Clock Sync (Essential for Odom to not be empty)
+- ros_topic_name: "/clock"
+  gz_topic_name: "/clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "ignition.msgs.Clock"
+  direction: GZ_TO_ROS
+
+# Odometry (From Gazebo to ROS)
+- ros_topic_name: "/lifter1/odom"
+  gz_topic_name: "/lifter1/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: GZ_TO_ROS
+
 # Arm Joint Commands
-- ros_topic_name: "/lifter1/arm_joint_1"
+- ros_topic_name: "/lifter1/arm_joint_1/cmd_vel"
   gz_topic_name: "/model/lifter1/joint/arm_joint_1/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
 
-- ros_topic_name: "/runner1/piston_rod_joint"
-  gz_topic_name: "/model/runner1/joint/arm_joint_1/cmd_vel"
-  ros_type_name: "std_msgs/msg/Float64"
-  gz_type_name: "ignition.msgs.Double"
-  direction: ROS_TO_GZ
-
-- ros_topic_name: "/lifter1/arm_joint_2"
+- ros_topic_name: "/lifter1/arm_joint_2/cmd_vel"
   gz_topic_name: "/model/lifter1/joint/arm_joint_2/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
 
-- ros_type_name: "nav_msgs/msg/Odometry"
-  ros_topic_name: "/lifter1/odom"
-  gz_topic_name: "/lifter1/odom"
-  gz_type_name: "ignition.msgs.Odometry"
-  direction: GZ_TO_ROS
+# Wheel Velocity Commands (Required by your Python Script)
+- ros_topic_name: "/model/lifter1/joint/wheel_fl_joint/cmd_vel"
+  gz_topic_name: "/model/lifter1/joint/wheel_fl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
 
-- ros_type_name: "nav_msgs/msg/Odometry"
-  ros_topic_name: "/runner1/odom"
-  gz_topic_name: "/runner1/odom"
-  gz_type_name: "ignition.msgs.Odometry"
-  direction: GZ_TO_ROS
+- ros_topic_name: "/model/lifter1/joint/wheel_fr_joint/cmd_vel"
+  gz_topic_name: "/model/lifter1/joint/wheel_fr_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
 
-# Joint States Feedback
+- ros_topic_name: "/model/lifter1/joint/wheel_bl_joint/cmd_vel"
+  gz_topic_name: "/model/lifter1/joint/wheel_bl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter1/joint/wheel_br_joint/cmd_vel"
+  gz_topic_name: "/model/lifter1/joint/wheel_br_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+# Joint States (For visualization/feedback)
 - ros_topic_name: "/lifter1/joint_states"
   gz_topic_name: "/world/default/model/lifter1/joint_state"
   ros_type_name: "sensor_msgs/msg/JointState"
   gz_type_name: "gz.msgs.Model"
   direction: GZ_TO_ROS
 
+# Odometry (From Gazebo to ROS)
+- ros_topic_name: "/runner1/odom"
+  gz_topic_name: "/runner1/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+# Arm Joint Commands
+- ros_topic_name: "/runner1/arm_joint_1/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/arm_joint_1/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/runner1/arm_joint_2/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/arm_joint_2/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+# Wheel Velocity Commands (Required by your Python Script)
+- ros_topic_name: "/model/runner1/joint/wheel_fl_joint/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/wheel_fl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner1/joint/wheel_fr_joint/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/wheel_fr_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner1/joint/wheel_bl_joint/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/wheel_bl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner1/joint/wheel_br_joint/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/wheel_br_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+# Joint States (For visualization/feedback)
 - ros_topic_name: "/runner1/joint_states"
   gz_topic_name: "/world/default/model/runner1/joint_state"
   ros_type_name: "sensor_msgs/msg/JointState"
   gz_type_name: "gz.msgs.Model"
   direction: GZ_TO_ROS
-
-# Clock Sync
-- ros_topic_name: "/clock"
-  gz_topic_name: "/clock"
-  ros_type_name: "rosgraph_msgs/msg/Clock"
-  gz_type_name: "gz.msgs.Clock"
-  direction: GZ_TO_ROS
-
-# Wheel Velocity Commands (FIXED: Added leading slash)
-- ros_topic_name: "/lifter1/bot_cmd"
-  gz_topic_name: "/model/lifter1/bot_cmd"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "ignition.msgs.Twist"
-  direction: ROS_TO_GZ
-
-- ros_topic_name: "/runner1/bot_cmd"
-  gz_topic_name: "/model/runner1/bot_cmd"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "ignition.msgs.Twist"
-  direction: ROS_TO_GZ

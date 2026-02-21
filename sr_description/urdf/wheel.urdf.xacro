@@ -4,6 +4,7 @@
   <xacro:macro name="create_wheels">
 
     <!-- ================= FRONT LEFT WHEEL ================= -->
+    <!-- Position: +X (front), +Y (left) -->
     <link name="wheel_fl_link">
       <visual>
         <origin xyz="0 0 0" rpy="1.5708 0 0"/>
@@ -27,7 +28,7 @@
       </inertial>
     </link>
 
-    <!-- Front Left Joint - DIRECTLY TO BASE_LINK -->
+    <!-- Front Left Joint -->
     <joint name="wheel_fl_joint" type="revolute">
       <parent link="base_link"/>
       <child link="wheel_fl_link"/>
@@ -38,6 +39,7 @@
     </joint>
 
     <!-- ================= FRONT RIGHT WHEEL ================= -->
+    <!-- Position: +X (front), -Y (right) -->
     <link name="wheel_fr_link">
       <visual>
         <origin xyz="0 0 0" rpy="1.5708 0 0"/>
@@ -61,7 +63,7 @@
       </inertial>
     </link>
 
-    <!-- Front Right Joint - DIRECTLY TO BASE_LINK -->
+    <!-- Front Right Joint -->
     <joint name="wheel_fr_joint" type="revolute">
       <parent link="base_link"/>
       <child link="wheel_fr_link"/>
@@ -72,6 +74,7 @@
     </joint>
 
     <!-- ================= REAR LEFT WHEEL ================= -->
+    <!-- Position: -X (back), +Y (left) -->
     <link name="wheel_bl_link">
       <visual>
         <origin xyz="0 0 0" rpy="1.5708 0 0"/>
@@ -95,7 +98,7 @@
       </inertial>
     </link>
 
-    <!-- Rear Left Joint - DIRECTLY TO BASE_LINK -->
+    <!-- Rear Left Joint -->
     <joint name="wheel_bl_joint" type="revolute">
       <parent link="base_link"/>
       <child link="wheel_bl_link"/>
@@ -106,6 +109,7 @@
     </joint>
 
     <!-- ================= REAR RIGHT WHEEL ================= -->
+    <!-- Position: -X (back), -Y (right) -->
     <link name="wheel_br_link">
       <visual>
         <origin xyz="0 0 0" rpy="1.5708 0 0"/>
@@ -129,7 +133,7 @@
       </inertial>
     </link>
 
-    <!-- Rear Right Joint - DIRECTLY TO BASE_LINK -->
+    <!-- Rear Right Joint -->
     <joint name="wheel_br_joint" type="revolute">
       <parent link="base_link"/>
       <child link="wheel_br_link"/>

@@ -9,7 +9,7 @@
       <!-- Inertia -->
       <inertial>
         <origin xyz="0 0 0.1" rpy="0 0 0"/>
-        <mass value="1.5"/>
+        <mass value="0.5"/>
         <inertia
           ixx="0.01" ixy="0.0" ixz="0.0"
           iyy="0.01" iyz="0.0"
@@ -26,12 +26,12 @@
       </visual>
 
       <!-- Collision (simple box for stability) -->
-      <collision>
+      <!-- <collision>
         <origin xyz="0 0 0.1" rpy="0 0 0"/>
         <geometry>
-          <box size="0.05 0.05 0.25" scale="5 5 3"/>
+          <box size="0.05 0.05 0.15" scale="5 5 3"/>
         </geometry>
-      </collision>
+      </collision> -->
 
     </link>
 
@@ -41,7 +41,7 @@
       <!-- Inertia -->
       <inertial>
         <origin xyz="0 0 0.1" rpy="0 0 0"/>
-        <mass value="1.0"/>
+        <mass value="0.35"/>
         <inertia
           ixx="0.005" ixy="0.0" ixz="0.0"
           iyy="0.005" iyz="0.0"
@@ -58,30 +58,32 @@
       </visual>
 
       <!-- Collision -->
-      <collision>
+      <!-- <collision>
         <origin xyz="0 0 0.1" rpy="0 0 0"/>
         <geometry>
-          <box size="0.04 0.04 0.20" scale="5 5 2"/>
+          <box size="0.04 0.04 0.10" scale="5 5 2"/>
         </geometry>
-      </collision>
+      </collision> -->
 
     </link>
 
     <!-- JOINT 1 -->
-    <joint name="arm_joint_1" type="continuous">
+    <joint name="arm_joint_1" type="revolute">
       <parent link="arm_base_link"/>
       <child link="arm_link_1"/>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
+      <limit effort="100.0" velocity="10.0" lower="0.0" upper="1.5708"/>
       <dynamics damping="0.1" friction="0.1"/>
     </joint>
 
     <!-- JOINT 2 -->
-    <joint name="arm_joint_2" type="continuous">
+    <joint name="arm_joint_2" type="revolute">
       <parent link="arm_link_1"/>
       <child link="arm_link_2"/>
       <origin xyz="0 0 0.155" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
+      <limit effort="100.0" velocity="10.0" lower="0.0" upper="1.5708"/>
       <dynamics damping="0.1" friction="0.1"/>
     </joint>
 

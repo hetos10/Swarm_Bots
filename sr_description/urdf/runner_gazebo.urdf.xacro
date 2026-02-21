@@ -2,31 +2,61 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:macro name="gazebo_setup_run" params="robot_ns">
-
     <gazebo>
-        <plugin
-        filename="ignition-gazebo-velocity-control-system"
-        name="gz::sim::systems::VelocityControl">
-        </plugin>
+        <static>false</static>
+    </gazebo>
+    <gazebo reference="wheel_fl_link">
+      <mu1>5.0</mu1>      <!-- INCREASE friction -->
+      <mu2>5.0</mu2>      <!-- INCREASE friction -->
+      <kp>10000000.0</kp> <!-- INCREASE stiffness -->
+      <kd>1000.0</kd>     <!-- INCREASE damping -->
+    </gazebo>
+    <gazebo reference="wheel_fr_link">
+      <mu1>5.0</mu1>      <!-- INCREASE friction -->
+      <mu2>5.0</mu2>      <!-- INCREASE friction -->
+      <kp>10000000.0</kp> <!-- INCREASE stiffness -->
+      <kd>1000.0</kd>     <!-- INCREASE damping -->
+    </gazebo>
+    <gazebo reference="wheel_bl_link">
+      <mu1>5.0</mu1>      <!-- INCREASE friction -->
+      <mu2>5.0</mu2>      <!-- INCREASE friction -->
+      <kp>10000000.0</kp> <!-- INCREASE stiffness -->
+      <kd>1000.0</kd>     <!-- INCREASE damping -->
+    </gazebo>
+    <gazebo reference="wheel_br_link">
+      <mu1>5.0</mu1>      <!-- INCREASE friction -->
+      <mu2>5.0</mu2>      <!-- INCREASE friction -->
+      <kp>10000000.0</kp> <!-- INCREASE stiffness -->
+      <kd>1000.0</kd>     <!-- INCREASE damping -->
+    </gazebo>
+    <gazebo>
+      <plugin filename="libignition-gazebo-joint-state-publisher-system.so" 
+              name="ignition::gazebo::systems::JointStatePublisher">
+      </plugin>
 
-        <plugin filename="ignition-gazebo-joint-state-publisher-system"
-        name="ignition::gazebo::systems::JointStatePublisher">
-        </plugin>
+      <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
+          <joint_name>wheel_fl_joint</joint_name>
+          <topic>/model/runner1/joint/wheel_fl_joint/cmd_vel</topic>
+      </plugin>
+      <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
+          <joint_name>wheel_fr_joint</joint_name>
+          <topic>/model/runner1/joint/wheel_fr_joint/cmd_vel</topic>
+      </plugin>
+      <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
+          <joint_name>wheel_bl_joint</joint_name>
+          <topic>/model/runner1/joint/wheel_bl_joint/cmd_vel</topic>
+      </plugin>
+      <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
+          <joint_name>wheel_br_joint</joint_name>
+          <topic>/model/runner1/joint/wheel_br_joint/cmd_vel</topic>
+      </plugin>
 
-        <!-- ign topic -t "/model/{bot_name}/joint/arm_base/cmd_vel" -m ignition.msgs.Double -p "data: 10.0" -->
-        <plugin filename="ignition-gazebo-joint-controller-system"
-        name="gz::sim::systems::JointController">
-        <joint_name>piston_rod_joint</joint_name>
-        </plugin>
-
-        <plugin filename="libignition-gazebo6-odometry-publisher-system.so" 
-        name="ignition::gazebo::systems::OdometryPublisher">
-          <body_name>base_link</body_name>
-          <odom_publish_frequency>100</odom_publish_frequency>
-          <odom_topic>${robot_ns}/odom</odom_topic>
-          <tf_topic>${robot_ns}/tf</tf_topic>
-        </plugin>
-
+      <plugin filename="libignition-gazebo-odometry-publisher-system.so" name="ignition::gazebo::systems::OdometryPublisher">
+          <odom_topic>/runner1/odom</odom_topic>
+          <odom_frame>odom</odom_frame>
+          <robot_base_frame>base_footprint</robot_base_frame>
+          <odom_publish_frequency>50</odom_publish_frequency>
+      </plugin>
     </gazebo>
   </xacro:macro>
 </robot>
