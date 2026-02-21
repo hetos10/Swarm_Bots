@@ -1,0 +1,359 @@
+# Clock Sync (Shared by all)
+- ros_topic_name: "/clock"
+  gz_topic_name: "/clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "ignition.msgs.Clock"
+  direction: GZ_TO_ROS
+
+# ==========================================
+# LIFTER BOTS (1 to 4)
+# ==========================================
+
+# Use a loop-like structure represented for all 4 lifters
+# LIFTER 1
+- ros_topic_name: "/lifter1/odom"
+  gz_topic_name: "/lifter1/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/lifter1/arm_joint_1/cmd_vel"
+  gz_topic_name: "/model/lifter1/joint/arm_joint_1/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/lifter1/arm_joint_2/cmd_vel"
+  gz_topic_name: "/model/lifter1/joint/arm_joint_2/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter1/joint/wheel_fl_joint/cmd_vel"
+  gz_topic_name: "/model/lifter1/joint/wheel_fl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter1/joint/wheel_fr_joint/cmd_vel"
+  gz_topic_name: "/model/lifter1/joint/wheel_fr_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter1/joint/wheel_bl_joint/cmd_vel"
+  gz_topic_name: "/model/lifter1/joint/wheel_bl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter1/joint/wheel_br_joint/cmd_vel"
+  gz_topic_name: "/model/lifter1/joint/wheel_br_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+# LIFTER 2
+- ros_topic_name: "/lifter2/odom"
+  gz_topic_name: "/lifter2/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/lifter2/arm_joint_1/cmd_vel"
+  gz_topic_name: "/model/lifter2/joint/arm_joint_1/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/lifter2/arm_joint_2/cmd_vel"
+  gz_topic_name: "/model/lifter2/joint/arm_joint_2/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter2/joint/wheel_fl_joint/cmd_vel"
+  gz_topic_name: "/model/lifter2/joint/wheel_fl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter2/joint/wheel_fr_joint/cmd_vel"
+  gz_topic_name: "/model/lifter2/joint/wheel_fr_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter2/joint/wheel_bl_joint/cmd_vel"
+  gz_topic_name: "/model/lifter2/joint/wheel_bl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter2/joint/wheel_br_joint/cmd_vel"
+  gz_topic_name: "/model/lifter2/joint/wheel_br_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+# LIFTER 3
+- ros_topic_name: "/lifter3/odom"
+  gz_topic_name: "/lifter3/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/lifter3/arm_joint_1/cmd_vel"
+  gz_topic_name: "/model/lifter3/joint/arm_joint_1/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/lifter3/arm_joint_2/cmd_vel"
+  gz_topic_name: "/model/lifter3/joint/arm_joint_2/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter3/joint/wheel_fl_joint/cmd_vel"
+  gz_topic_name: "/model/lifter3/joint/wheel_fl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter3/joint/wheel_fr_joint/cmd_vel"
+  gz_topic_name: "/model/lifter3/joint/wheel_fr_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter3/joint/wheel_bl_joint/cmd_vel"
+  gz_topic_name: "/model/lifter3/joint/wheel_bl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter3/joint/wheel_br_joint/cmd_vel"
+  gz_topic_name: "/model/lifter3/joint/wheel_br_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+# LIFTER 4
+- ros_topic_name: "/lifter4/odom"
+  gz_topic_name: "/lifter4/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/lifter4/arm_joint_1/cmd_vel"
+  gz_topic_name: "/model/lifter4/joint/arm_joint_1/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/lifter4/arm_joint_2/cmd_vel"
+  gz_topic_name: "/model/lifter4/joint/arm_joint_2/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter4/joint/wheel_fl_joint/cmd_vel"
+  gz_topic_name: "/model/lifter4/joint/wheel_fl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter4/joint/wheel_fr_joint/cmd_vel"
+  gz_topic_name: "/model/lifter4/joint/wheel_fr_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter4/joint/wheel_bl_joint/cmd_vel"
+  gz_topic_name: "/model/lifter4/joint/wheel_bl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/lifter4/joint/wheel_br_joint/cmd_vel"
+  gz_topic_name: "/model/lifter4/joint/wheel_br_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+# ==========================================
+# RUNNER BOTS (1 to 4)
+# ==========================================
+
+# RUNNER 1
+- ros_topic_name: "/runner1/odom"
+  gz_topic_name: "/runner1/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/runner1/arm_joint_1/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/arm_joint_1/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/runner1/arm_joint_2/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/arm_joint_2/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner1/joint/wheel_fl_joint/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/wheel_fl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner1/joint/wheel_fr_joint/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/wheel_fr_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner1/joint/wheel_bl_joint/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/wheel_bl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner1/joint/wheel_br_joint/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/wheel_br_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+# RUNNER 2
+- ros_topic_name: "/runner2/odom"
+  gz_topic_name: "/runner2/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/runner2/arm_joint_1/cmd_vel"
+  gz_topic_name: "/model/runner2/joint/arm_joint_1/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/runner2/arm_joint_2/cmd_vel"
+  gz_topic_name: "/model/runner2/joint/arm_joint_2/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner2/joint/wheel_fl_joint/cmd_vel"
+  gz_topic_name: "/model/runner2/joint/wheel_fl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner2/joint/wheel_fr_joint/cmd_vel"
+  gz_topic_name: "/model/runner2/joint/wheel_fr_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner2/joint/wheel_bl_joint/cmd_vel"
+  gz_topic_name: "/model/runner2/joint/wheel_bl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner2/joint/wheel_br_joint/cmd_vel"
+  gz_topic_name: "/model/runner2/joint/wheel_br_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+# RUNNER 3
+- ros_topic_name: "/runner3/odom"
+  gz_topic_name: "/runner3/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/runner3/arm_joint_1/cmd_vel"
+  gz_topic_name: "/model/runner3/joint/arm_joint_1/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/runner3/arm_joint_2/cmd_vel"
+  gz_topic_name: "/model/runner3/joint/arm_joint_2/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner3/joint/wheel_fl_joint/cmd_vel"
+  gz_topic_name: "/model/runner3/joint/wheel_fl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner3/joint/wheel_fr_joint/cmd_vel"
+  gz_topic_name: "/model/runner3/joint/wheel_fr_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner3/joint/wheel_bl_joint/cmd_vel"
+  gz_topic_name: "/model/runner3/joint/wheel_bl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner3/joint/wheel_br_joint/cmd_vel"
+  gz_topic_name: "/model/runner3/joint/wheel_br_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+# RUNNER 4
+- ros_topic_name: "/runner4/odom"
+  gz_topic_name: "/runner4/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/runner4/arm_joint_1/cmd_vel"
+  gz_topic_name: "/model/runner4/joint/arm_joint_1/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/runner4/arm_joint_2/cmd_vel"
+  gz_topic_name: "/model/runner4/joint/arm_joint_2/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner4/joint/wheel_fl_joint/cmd_vel"
+  gz_topic_name: "/model/runner4/joint/wheel_fl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner4/joint/wheel_fr_joint/cmd_vel"
+  gz_topic_name: "/model/runner4/joint/wheel_fr_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner4/joint/wheel_bl_joint/cmd_vel"
+  gz_topic_name: "/model/runner4/joint/wheel_bl_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/model/runner4/joint/wheel_br_joint/cmd_vel"
+  gz_topic_name: "/model/runner4/joint/wheel_br_joint/cmd_vel"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "ignition.msgs.Double"
+  direction: ROS_TO_GZ
