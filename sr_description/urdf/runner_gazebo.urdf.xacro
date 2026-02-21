@@ -5,35 +5,14 @@
     <gazebo>
         <static>false</static>
     </gazebo>
-    <gazebo reference="wheel_fl_link">
-      <mu1>5.0</mu1>      <!-- INCREASE friction -->
-      <mu2>5.0</mu2>      <!-- INCREASE friction -->
-      <kp>10000000.0</kp> <!-- INCREASE stiffness -->
-      <kd>1000.0</kd>     <!-- INCREASE damping -->
-    </gazebo>
-    <gazebo reference="wheel_fr_link">
-      <mu1>5.0</mu1>      <!-- INCREASE friction -->
-      <mu2>5.0</mu2>      <!-- INCREASE friction -->
-      <kp>10000000.0</kp> <!-- INCREASE stiffness -->
-      <kd>1000.0</kd>     <!-- INCREASE damping -->
-    </gazebo>
-    <gazebo reference="wheel_bl_link">
-      <mu1>5.0</mu1>      <!-- INCREASE friction -->
-      <mu2>5.0</mu2>      <!-- INCREASE friction -->
-      <kp>10000000.0</kp> <!-- INCREASE stiffness -->
-      <kd>1000.0</kd>     <!-- INCREASE damping -->
-    </gazebo>
-    <gazebo reference="wheel_br_link">
-      <mu1>5.0</mu1>      <!-- INCREASE friction -->
-      <mu2>5.0</mu2>      <!-- INCREASE friction -->
-      <kp>10000000.0</kp> <!-- INCREASE stiffness -->
-      <kd>1000.0</kd>     <!-- INCREASE damping -->
-    </gazebo>
+ 
+
+
     <gazebo>
+    
       <plugin filename="libignition-gazebo-joint-state-publisher-system.so" 
               name="ignition::gazebo::systems::JointStatePublisher">
       </plugin>
-
       <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
           <joint_name>wheel_fl_joint</joint_name>
           <topic>/model/runner1/joint/wheel_fl_joint/cmd_vel</topic>
@@ -50,13 +29,15 @@
           <joint_name>wheel_br_joint</joint_name>
           <topic>/model/runner1/joint/wheel_br_joint/cmd_vel</topic>
       </plugin>
-
       <plugin filename="libignition-gazebo-odometry-publisher-system.so" name="ignition::gazebo::systems::OdometryPublisher">
           <odom_topic>/runner1/odom</odom_topic>
           <odom_frame>odom</odom_frame>
           <robot_base_frame>base_footprint</robot_base_frame>
           <odom_publish_frequency>50</odom_publish_frequency>
       </plugin>
+
     </gazebo>
   </xacro:macro>
+
+  
 </robot>
