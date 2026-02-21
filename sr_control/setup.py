@@ -23,9 +23,6 @@ setup(
     entry_points={
         'console_scripts': [
             'swarm_control = sr_control.swarm_control:main',
-            'wheel_control = sr_control.wheel_control:main',
-            'arm_control = sr_control.arm_control:main',
-            'piston_control = sr_control.piston_control:main',
         ],
     },
 )

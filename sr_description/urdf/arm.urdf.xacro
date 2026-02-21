@@ -29,7 +29,7 @@
       <collision>
         <origin xyz="0 0 0.1" rpy="0 0 0"/>
         <geometry>
-          <box size="0.05 0.05 0.25"/>
+          <box size="0.05 0.05 0.25" scale="5 5 3"/>
         </geometry>
       </collision>
 
@@ -61,7 +61,7 @@
       <collision>
         <origin xyz="0 0 0.1" rpy="0 0 0"/>
         <geometry>
-          <box size="0.04 0.04 0.20"/>
+          <box size="0.04 0.04 0.20" scale="5 5 2"/>
         </geometry>
       </collision>
 

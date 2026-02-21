@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>linkattacher_msgs</name>
   <version>0.0.0</version>
-  <description>IFRA-Cranfield (Cranfield University, UK). Package: ROS 2 LinkAttacher for Gazebo Simulation (MSGS PACKAGE)</description>
+  <description>Custom messages for link attacher functionality</description>
 
-  <author>Mikel Bueno Viso</author>
-  <maintainer email="Mikel.Bueno-Viso@cranfield.ac.uk">Mikel Bueno Viso</maintainer>
+  <author>Ajay Balaji</author>
+  <maintainer email="ajay.balaji@e-yantra.org">Ajay Balaji</maintainer>
   
   <license>Apache-2.0</license>
 

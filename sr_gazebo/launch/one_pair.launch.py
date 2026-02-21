@@ -8,6 +8,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable 
 from launch.substitutions import Command, LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import PythonExpression
 
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
@@ -120,10 +121,14 @@ def generate_launch_description():
             )
         ),
         launch_arguments={
-            "gz_args": LaunchConfiguration("world")
+            "gz_args": PythonExpression([
+                "'",
+                LaunchConfiguration("world"),
+                " -v 4 -r --physics-engine ",
+                "'"
+            ])
         }.items()
     )
-
     # -------------------------------
     # Spawn Robots
     # -------------------------------
@@ -159,6 +164,9 @@ def generate_launch_description():
     gz_ros2_bridge = Node(
             package="ros_gz_bridge",
             executable="parameter_bridge",
+            parameters=[
+                {"use_sim_time": True}
+            ],
             arguments=[
                 '--ros-args', 
                 '-p', f'config_file:={ros2_gz_bridge_config}'
