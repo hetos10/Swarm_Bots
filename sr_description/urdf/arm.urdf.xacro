@@ -26,12 +26,12 @@
       </visual>
 
       <!-- Collision (simple box for stability) -->
-      <!-- <collision>
+      <collision>
         <origin xyz="0 0 0.1" rpy="0 0 0"/>
         <geometry>
           <box size="0.05 0.05 0.15" scale="5 5 3"/>
         </geometry>
-      </collision> -->
+      </collision>
 
     </link>
 
@@ -58,12 +58,12 @@
       </visual>
 
       <!-- Collision -->
-      <!-- <collision>
+      <collision>
         <origin xyz="0 0 0.1" rpy="0 0 0"/>
         <geometry>
           <box size="0.04 0.04 0.10" scale="5 5 2"/>
         </geometry>
-      </collision> -->
+      </collision>
 
     </link>
 
