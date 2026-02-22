@@ -19,7 +19,7 @@ def generate_launch_description():
     sr_description = get_package_share_directory("sr_description")
     sr_gazebo = get_package_share_directory("sr_gazebo")
     ros2_gz_bridge_config = os.path.join(
-        get_package_share_directory('sr_gazebo'),
+        get_package_share_directory('sr_main'),
         'config',
         'complete_bridge.yaml'
     )
