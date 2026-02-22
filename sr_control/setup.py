@@ -23,6 +23,8 @@ setup(
     entry_points={
         'console_scripts': [
             'swarm_control = sr_control.swarm_control:main',
+            'swarm_control_2 = sr_control.swarm_control_2:main',
+
         ],
     },
 )

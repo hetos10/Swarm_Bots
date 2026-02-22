@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 '''
-Multi-Robot Differential Drive Controller
-- LIFTER: Picks up crate, delivers to exchange zone
-- RUNNER: Moves from home to exchange zone, receives crate, delivers to drop zone
-- Synchronized handoff at exchange zone
+Multi-Robot Differential Drive Controller - PRODUCTION READY
+- LIFTER: Picks crate from crate zone, delivers to exchange
+- RUNNER: Moves to exchange, receives crate, delivers to drop zone
+- Synchronized handoff with proper arm control
+- All timing delays and waiting states implemented
 '''
 
 import rclpy
@@ -48,7 +49,7 @@ class PID:
 
 class MultiRobotController(Node):
     def __init__(self):
-        super().__init__('multi_robot_controller')
+        super().__init__('swarm_control_2')
 
         # ========== LIFTER ODOMETRY ==========
         self.lifter_x = 0.0
@@ -70,11 +71,11 @@ class MultiRobotController(Node):
         self.crate_x = 4.9
         self.crate_y = 4.7
         
-        # ========== EXCHANGE ZONE (where handoff happens) ==========
+        # ========== EXCHANGE ZONE ==========
         self.exchange_x = 0.0
         self.exchange_y = 0.0
         
-        # ========== DROP ZONE (where runner drops) ==========
+        # ========== DROP ZONE ==========
         self.drop_x = 4.7
         self.drop_y = -4.9
         
@@ -82,7 +83,7 @@ class MultiRobotController(Node):
         self.lifter_home = {'x': -4.5, 'y': 4.0, 'theta': 0.0}
         self.runner_home = {'x': -4.5, 'y': -4.0, 'theta': 0.0}
         
-        self.max_vel = 15.0  # SLOW movement
+        self.max_vel = 8.0  # Slower smooth movement
         
         # ========== LIFTER STATE ==========
         self.lifter_state = 'moving_to_crate'
@@ -93,7 +94,7 @@ class MultiRobotController(Node):
         self.lifter_detach_future = None
         
         # ========== RUNNER STATE ==========
-        self.runner_state = 'moving_to_exchange'  # RUNNER MOVES TO EXCHANGE FIRST!
+        self.runner_state = 'moving_to_exchange'
         self.runner_arm_base = 0.0
         self.runner_arm_elbow = 0.0
         self.runner_timer = None
@@ -104,9 +105,9 @@ class MultiRobotController(Node):
         self.wheel_radius = 0.1
         self.wheel_separation_y = 0.4
 
-        # ========== PID CONTROLLERS - SMOOTH GAINS ==========
-        pid_params_x = {'kp': 0.5, 'ki': 0.00005, 'kd': 0.1, 'max_out': self.max_vel}
-        pid_params_theta = {'kp': 0.5, 'ki': 0.000005, 'kd': 0.1, 'max_out': 10.0}
+        # ========== PID CONTROLLERS - TUNED FOR SMOOTH MOVEMENT ==========
+        pid_params_x = {'kp': 1.5, 'ki': 0.0, 'kd': 0.0, 'max_out': self.max_vel}
+        pid_params_theta = {'kp': 1.5, 'ki': 0.0, 'kd': 0.0, 'max_out': 6.0}
         
         self.lifter_pid_x = PID(**pid_params_x)
         self.lifter_pid_theta = PID(**pid_params_theta)
@@ -141,9 +142,9 @@ class MultiRobotController(Node):
         self.timer = self.create_timer(0.03, self.control_cb)
 
         self.get_logger().info('='*70)
-        self.get_logger().info('Multi-Robot Controller Started')
-        self.get_logger().info('LIFTER: Pick crate → Exchange')
-        self.get_logger().info('RUNNER: Home → Exchange → Drop → Home')
+        self.get_logger().info('Multi-Robot Controller - PRODUCTION READY')
+        self.get_logger().info('LIFTER: Crate Zone → Exchange')
+        self.get_logger().info('RUNNER: Home → Exchange → Drop Zone → Home')
         self.get_logger().info('='*70)
 
     def lifter_odom_callback(self, msg: Odometry):
@@ -154,7 +155,7 @@ class MultiRobotController(Node):
         
         if not self.lifter_first_odom:
             self.lifter_first_odom = True
-            self.get_logger().info(f'✓ Lifter odometry synchronized! At ({self.lifter_x:.2f}, {self.lifter_y:.2f})')
+            self.get_logger().info(f'✓ Lifter synchronized at ({self.lifter_x:.2f}, {self.lifter_y:.2f})')
 
     def runner_odom_callback(self, msg: Odometry):
         self.runner_x = msg.pose.pose.position.x
@@ -164,7 +165,7 @@ class MultiRobotController(Node):
         
         if not self.runner_first_odom:
             self.runner_first_odom = True
-            self.get_logger().info(f'✓ Runner odometry synchronized! At ({self.runner_x:.2f}, {self.runner_y:.2f})')
+            self.get_logger().info(f'✓ Runner synchronized at ({self.runner_x:.2f}, {self.runner_y:.2f})')
 
     def normalize_angle(self, angle):
         while angle > math.pi:
@@ -256,12 +257,12 @@ class MultiRobotController(Node):
             return
 
         # ========== KEEP ARMS RAISED during movement ==========
-        if self.lifter_state in ['moving_to_crate', 'attaching_crate', 'moving_to_exchange', 'detaching_at_exchange', 'returning_home']:
+        if self.lifter_state in ['moving_to_crate', 'moving_to_exchange', 'returning_home']:
             self.lifter_arm_base = 0.0
             self.lifter_arm_elbow = 0.0
             self.publish_lifter_arm()
 
-        if self.runner_state in ['moving_to_exchange', 'waiting_at_exchange', 'picking_up_crate', 'moving_to_drop', 'detaching_at_drop', 'returning_home']:
+        if self.runner_state in ['moving_to_exchange', 'moving_to_drop', 'returning_home']:
             self.runner_arm_base = 0.0
             self.runner_arm_elbow = 0.0
             self.publish_runner_arm()
@@ -273,45 +274,75 @@ class MultiRobotController(Node):
                                                    self.lifter_pid_x, self.lifter_pid_theta, dt)
             
             if should_log:
-                self.get_logger().info(f'[LIFTER] Moving to crate: Dist={dist:.2f}m Pos=({self.lifter_x:.2f},{self.lifter_y:.2f})')
+                self.get_logger().info(f'[LIFTER] Moving to crate: Dist={dist:.2f}m')
             
-            if dist < 0.1:
+            if dist < 0.15:
                 if should_log:
-                    self.get_logger().info('✓ LIFTER: Crate reached! Lowering arm...')
+                    self.get_logger().info('✓ LIFTER: Crate reached! Waiting...')
                 self.publish_lifter_wheels(0.0, 0.0)
-                self.lifter_arm_base = 1.57
-                self.lifter_arm_elbow = 1.57
-                self.publish_lifter_arm()
-                self.lifter_state = 'lowering_for_crate'
+                self.lifter_state = 'waiting_before_lower'
                 self.lifter_timer = now
             else:
                 self.publish_lifter_wheels(vx, w)
 
-        elif self.lifter_state == 'lowering_for_crate':
+        elif self.lifter_state == 'waiting_before_lower':
             self.publish_lifter_wheels(0.0, 0.0)
             elapsed = (now - self.lifter_timer).nanoseconds / 1e9
-            if elapsed > 1.5:
+            if elapsed > 2.0:
+                if should_log:
+                    self.get_logger().info('[LIFTER] Lowering arm...')
+                self.lifter_arm_base = 1.57
+                self.lifter_arm_elbow = 0.0
+                self.publish_lifter_arm()
+                self.lifter_state = 'lowering_for_crate'
+                self.lifter_timer = now
+
+        elif self.lifter_state == 'lowering_for_crate':
+            self.publish_lifter_wheels(0.0, 0.0)
+            self.lifter_arm_base = 1.57
+            self.lifter_arm_elbow = 0.0
+            self.publish_lifter_arm()
+            elapsed = (now - self.lifter_timer).nanoseconds / 1e9
+            if elapsed > 2.0:
                 if should_log:
                     self.get_logger().info('[LIFTER] Attaching crate...')
-                future = self.call_attach_service("lifter1", "arm_link_2", "crate", "box_link")
+                future = self.call_attach_service("lifter1", "gripper_link", "crate_red_1", "box_link")
                 if future:
                     self.lifter_attach_future = future
-                    self.lifter_state = 'attaching_crate'
+                    self.lifter_state = 'waiting_for_attach'
                     self.lifter_timer = now
 
-        elif self.lifter_state == 'attaching_crate':
+        elif self.lifter_state == 'waiting_for_attach':
             self.publish_lifter_wheels(0.0, 0.0)
+            self.lifter_arm_base = 1.57
+            self.lifter_arm_elbow = 0.0
+            self.publish_lifter_arm()
+            
             if self.lifter_attach_future and self.lifter_attach_future.done():
                 try:
                     self.lifter_attach_future.result()
                     if should_log:
-                        self.get_logger().info('✓ LIFTER: Crate attached! Moving to exchange...')
-                    self.lifter_state = 'moving_to_exchange'
-                    self.lifter_pid_x.reset()
-                    self.lifter_pid_theta.reset()
+                        self.get_logger().info('✓ LIFTER: Crate attached! Lifting...')
+                    self.lifter_state = 'lifting_after_attach'
+                    self.lifter_timer = now
                     self.lifter_attach_future = None
-                except:
+                except Exception as e:
+                    if should_log:
+                        self.get_logger().error(f'Attach failed: {e}')
                     self.lifter_state = 'lowering_for_crate'
+
+        elif self.lifter_state == 'lifting_after_attach':
+            self.publish_lifter_wheels(0.0, 0.0)
+            self.lifter_arm_base = 0.0
+            self.lifter_arm_elbow = 0.0
+            self.publish_lifter_arm()
+            elapsed = (now - self.lifter_timer).nanoseconds / 1e9
+            if elapsed > 2.0:
+                if should_log:
+                    self.get_logger().info('✓ LIFTER: Moving to exchange...')
+                self.lifter_state = 'moving_to_exchange'
+                self.lifter_pid_x.reset()
+                self.lifter_pid_theta.reset()
 
         elif self.lifter_state == 'moving_to_exchange':
             vx, w, dist, _ = self.move_to_target(self.lifter_x, self.lifter_y, self.lifter_theta,
@@ -319,11 +350,11 @@ class MultiRobotController(Node):
                                                    self.lifter_pid_x, self.lifter_pid_theta, dt)
             
             if should_log:
-                self.get_logger().info(f'[LIFTER] Moving to exchange: Dist={dist:.2f}m Pos=({self.lifter_x:.2f},{self.lifter_y:.2f})')
+                self.get_logger().info(f'[LIFTER] Moving to exchange: Dist={dist:.2f}m')
             
-            if dist < 0.1:
+            if dist < 0.15:
                 if should_log:
-                    self.get_logger().info('✓ LIFTER: At exchange zone! Waiting for runner...')
+                    self.get_logger().info('✓ LIFTER: At exchange! Waiting for runner...')
                 self.publish_lifter_wheels(0.0, 0.0)
                 self.lifter_state = 'waiting_for_runner_pickup'
                 self.lifter_timer = now
@@ -332,22 +363,25 @@ class MultiRobotController(Node):
 
         elif self.lifter_state == 'waiting_for_runner_pickup':
             self.publish_lifter_wheels(0.0, 0.0)
-            # Wait for runner to pick up crate
             elapsed = (now - self.lifter_timer).nanoseconds / 1e9
-            if elapsed > 2.0:  # Give runner time to reach and attach
+            if elapsed > 2.5:
                 if should_log:
-                    self.get_logger().info('[LIFTER] Detaching crate for runner pickup...')
+                    self.get_logger().info('[LIFTER] Detaching crate...')
                 self.lifter_arm_base = 1.57
-                self.lifter_arm_elbow = 1.57
+                self.lifter_arm_elbow = 0.0
                 self.publish_lifter_arm()
-                future = self.call_detach_service("lifter1", "arm_link_2", "crate", "box_link")
+                future = self.call_detach_service("lifter1", "gripper_link", "crate_red_1", "box_link")
                 if future:
                     self.lifter_detach_future = future
-                    self.lifter_state = 'detaching_at_exchange'
+                    self.lifter_state = 'waiting_for_detach'
                     self.lifter_timer = now
 
-        elif self.lifter_state == 'detaching_at_exchange':
+        elif self.lifter_state == 'waiting_for_detach':
             self.publish_lifter_wheels(0.0, 0.0)
+            self.lifter_arm_base = 1.57
+            self.lifter_arm_elbow = 0.0
+            self.publish_lifter_arm()
+            
             if self.lifter_detach_future and self.lifter_detach_future.done():
                 try:
                     self.lifter_detach_future.result()
@@ -366,7 +400,7 @@ class MultiRobotController(Node):
                                                    self.lifter_pid_x, self.lifter_pid_theta, dt)
             
             if should_log:
-                self.get_logger().info(f'[LIFTER] Returning home: Dist={dist:.2f}m Pos=({self.lifter_x:.2f},{self.lifter_y:.2f})')
+                self.get_logger().info(f'[LIFTER] Returning home: Dist={dist:.2f}m')
             
             if dist < 0.1:
                 if should_log:
@@ -383,11 +417,11 @@ class MultiRobotController(Node):
                                                    self.runner_pid_x, self.runner_pid_theta, dt)
             
             if should_log:
-                self.get_logger().info(f'[RUNNER] Moving to exchange: Dist={dist:.2f}m Pos=({self.runner_x:.2f},{self.runner_y:.2f})')
+                self.get_logger().info(f'[RUNNER] Moving to exchange: Dist={dist:.2f}m')
             
-            if dist < 0.1:
+            if dist < 0.15:
                 if should_log:
-                    self.get_logger().info('✓ RUNNER: At exchange zone! Waiting for crate...')
+                    self.get_logger().info('✓ RUNNER: At exchange! Waiting for crate...')
                 self.publish_runner_wheels(0.0, 0.0)
                 self.runner_state = 'waiting_at_exchange'
                 self.runner_timer = now
@@ -396,28 +430,24 @@ class MultiRobotController(Node):
 
         elif self.runner_state == 'waiting_at_exchange':
             self.publish_runner_wheels(0.0, 0.0)
-            if should_log:
-                self.get_logger().info('[RUNNER] Waiting for crate at exchange...')
-            
-            # Check if lifter has detached and runner should pick up
-            if self.lifter_state in ['detaching_at_exchange', 'returning_home']:
+            if self.lifter_state in ['waiting_for_runner_pickup', 'waiting_for_detach']:
                 elapsed = (now - self.runner_timer).nanoseconds / 1e9
-                if elapsed > 0.5:
+                if elapsed > 1.0:
                     if should_log:
                         self.get_logger().info('[RUNNER] Picking up crate...')
-                    future = self.call_attach_service("runner1", "arm_link_2", "crate", "box_link")
+                    future = self.call_attach_service("runner1", "base_link", "crate_red_1", "box_link")
                     if future:
                         self.runner_attach_future = future
-                        self.runner_state = 'picking_up_crate'
+                        self.runner_state = 'waiting_for_pickup'
                         self.runner_timer = now
 
-        elif self.runner_state == 'picking_up_crate':
+        elif self.runner_state == 'waiting_for_pickup':
             self.publish_runner_wheels(0.0, 0.0)
             if self.runner_attach_future and self.runner_attach_future.done():
                 try:
                     self.runner_attach_future.result()
                     if should_log:
-                        self.get_logger().info('✓ RUNNER: Crate picked up! Moving to drop zone...')
+                        self.get_logger().info('✓ RUNNER: Crate picked up! Moving to drop...')
                     self.runner_state = 'moving_to_drop'
                     self.runner_pid_x.reset()
                     self.runner_pid_theta.reset()
@@ -431,25 +461,29 @@ class MultiRobotController(Node):
                                                    self.runner_pid_x, self.runner_pid_theta, dt)
             
             if should_log:
-                self.get_logger().info(f'[RUNNER] Moving to drop zone: Dist={dist:.2f}m Pos=({self.runner_x:.2f},{self.runner_y:.2f})')
+                self.get_logger().info(f'[RUNNER] Moving to drop: Dist={dist:.2f}m')
             
-            if dist < 0.1:
+            if dist < 0.15:
                 if should_log:
                     self.get_logger().info('✓ RUNNER: At drop zone! Lowering arm...')
                 self.publish_runner_wheels(0.0, 0.0)
                 self.runner_arm_base = 1.57
-                self.runner_arm_elbow = 1.57
+                self.runner_arm_elbow = 0.0
                 self.publish_runner_arm()
-                future = self.call_detach_service("runner1", "arm_link_2", "crate", "box_link")
+                future = self.call_detach_service("runner1", "base_link", "crate_red_1", "box_link")
                 if future:
                     self.runner_detach_future = future
-                    self.runner_state = 'detaching_at_drop'
+                    self.runner_state = 'waiting_for_drop_detach'
                     self.runner_timer = now
             else:
                 self.publish_runner_wheels(vx, w)
 
-        elif self.runner_state == 'detaching_at_drop':
+        elif self.runner_state == 'waiting_for_drop_detach':
             self.publish_runner_wheels(0.0, 0.0)
+            self.runner_arm_base = 1.57
+            self.runner_arm_elbow = 0.0
+            self.publish_runner_arm()
+            
             if self.runner_detach_future and self.runner_detach_future.done():
                 try:
                     self.runner_detach_future.result()
@@ -468,7 +502,7 @@ class MultiRobotController(Node):
                                                    self.runner_pid_x, self.runner_pid_theta, dt)
             
             if should_log:
-                self.get_logger().info(f'[RUNNER] Returning home: Dist={dist:.2f}m Pos=({self.runner_x:.2f},{self.runner_y:.2f})')
+                self.get_logger().info(f'[RUNNER] Returning home: Dist={dist:.2f}m')
             
             if dist < 0.1:
                 if should_log:

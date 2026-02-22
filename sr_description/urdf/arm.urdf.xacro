@@ -71,10 +71,13 @@
       </inertial>
     </link>
     
-    <joint name="gripper_joint" type="fixed">
+    <joint name="gripper_joint" type="revolute">
       <parent link="arm_link_2"/>
       <child link="gripper_link"/>
       <origin xyz="0 0 0.12" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="1.0" velocity="0.01" lower="0" upper="0"/>
+      <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
     <!-- ================= GRIPPER LINK (EMPTY - FOR GRABBING) ================= -->

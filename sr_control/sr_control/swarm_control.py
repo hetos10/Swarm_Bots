@@ -49,7 +49,7 @@ class PID:
 
 class LifterController(Node):
     def __init__(self):
-        super().__init__('lifter_controller')
+        super().__init__('swarm_control')
 
         # ODOMETRY
         self.odom_x = 0.0
