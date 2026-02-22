@@ -55,8 +55,10 @@
           <joint_name>wheel_br_joint</joint_name>
           <topic>/model/runner1/joint/wheel_br_joint/cmd_vel</topic>
       </plugin>
-      <plugin filename="libignition-gazebo-link-attacher-system.so"
-        name="ignition::gazebo::systems::LinkAttacher">
+
+      <plugin
+        filename="libignition_link_attacher.so"
+        name="ignition_link_attacher">
       </plugin>
 
       <plugin filename="libignition-gazebo-joint-controller-system.so"
