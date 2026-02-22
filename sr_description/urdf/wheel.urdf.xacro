@@ -24,17 +24,17 @@
       <inertial>
         <origin xyz="0 0 0"/>
         <mass value="0.5"/>
-        <inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/>
+        <inertia ixx="0.000417" iyy="0.0005" izz="0.000417" ixy="0" ixz="0" iyz="0"/>
       </inertial>
     </link>
 
     <!-- Front Left Joint -->
-    <joint name="wheel_fl_joint" type="revolute">
+    <joint name="wheel_fl_joint" type="continuous">
       <parent link="base_link"/>
       <child link="wheel_fl_link"/>
       <origin xyz="0.20 0.20 0.0" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="100.0" velocity="40.0" lower="-3.14159" upper="3.14159"/>
+      <limit effort="100.0" velocity="40.0" lower="-100.0" upper="100.0"/>
       <dynamics damping="0.05" friction="0.1"/>
     </joint>
 
@@ -59,17 +59,17 @@
       <inertial>
         <origin xyz="0 0 0"/>
         <mass value="0.5"/>
-        <inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/>
+        <inertia ixx="0.000417" iyy="0.0005" izz="0.000417" ixy="0" ixz="0" iyz="0"/>
       </inertial>
     </link>
 
     <!-- Front Right Joint -->
-    <joint name="wheel_fr_joint" type="revolute">
+    <joint name="wheel_fr_joint" type="continuous">
       <parent link="base_link"/>
       <child link="wheel_fr_link"/>
       <origin xyz="0.20 -0.20 0.0" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="100.0" velocity="40.0" lower="-3.14159" upper="3.14159"/>
+      <limit effort="100.0" velocity="40.0" lower="-100.0" upper="100.0"/>
       <dynamics damping="0.05" friction="0.1"/>
     </joint>
 
@@ -94,17 +94,17 @@
       <inertial>
         <origin xyz="0 0 0"/>
         <mass value="0.5"/>
-        <inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/>
+        <inertia ixx="0.000417" iyy="0.0005" izz="0.000417" ixy="0" ixz="0" iyz="0"/>
       </inertial>
     </link>
 
     <!-- Rear Left Joint -->
-    <joint name="wheel_bl_joint" type="revolute">
+    <joint name="wheel_bl_joint" type="continuous">
       <parent link="base_link"/>
       <child link="wheel_bl_link"/>
       <origin xyz="-0.20 0.20 0.0" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="100.0" velocity="40.0" lower="-3.14159" upper="3.14159"/>
+      <limit effort="100.0" velocity="40.0" lower="-100.0" upper="100.0"/>
       <dynamics damping="0.05" friction="0.1"/>
     </joint>
 
@@ -129,17 +129,17 @@
       <inertial>
         <origin xyz="0 0 0"/>
         <mass value="0.5"/>
-        <inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/>
+        <inertia ixx="0.000417" iyy="0.0005" izz="0.000417" ixy="0" ixz="0" iyz="0"/>
       </inertial>
     </link>
 
     <!-- Rear Right Joint -->
-    <joint name="wheel_br_joint" type="revolute">
+    <joint name="wheel_br_joint" type="continuous">
       <parent link="base_link"/>
       <child link="wheel_br_link"/>
       <origin xyz="-0.20 -0.20 0.0" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="100.0" velocity="40.0" lower="-3.14159" upper="3.14159"/>
+      <limit effort="100.0" velocity="40.0" lower="-100.0" upper="100.0"/>
       <dynamics damping="0.05" friction="0.1"/>
     </joint>
 

@@ -65,15 +65,16 @@ class HolonomicPIDController(Node):
         self.goal_idx = 0
         
         # --- ROBOT PARAMS ---
-        self.max_vel = 2.0 
+        self.max_vel = 40.0 
         self.wheel_radius = 0.1
         self.wheel_separation_x = 0.4
         self.wheel_separation_y = 0.4
 
+        # PID GAINS - INCREASE THESE
         self.pid_params = {
-            'x': {'kp': 2.0, 'ki': 0.0, 'kd': 0.1, 'max_out': self.max_vel},
-            'y': {'kp': 2.0, 'ki': 0.0, 'kd': 0.1, 'max_out': self.max_vel},
-            'theta': {'kp': 1.0, 'ki': 0.0, 'kd': 0.0, 'max_out': self.max_vel / 2}
+            'x': {'kp': 2.0, 'ki': 0.005, 'kd': 0.2, 'max_out': self.max_vel},
+            'y': {'kp': 2.0, 'ki': 0.005, 'kd': 0.2, 'max_out': self.max_vel},
+            'theta': {'kp': 2.0, 'ki': 0.0005, 'kd': 0.2, 'max_out': self.max_vel / 2}
         }
 
         self.pid_x = PID(**self.pid_params['x'])
@@ -128,17 +129,22 @@ class HolonomicPIDController(Node):
         FL  FR
         BL  BR
         """
-        L_x = self.wheel_separation_x / 2.0  # 0.2m
-        L_y = self.wheel_separation_y / 2.0  # 0.2m
-        R = self.wheel_radius  # 0.1m
+        # L_x = self.wheel_separation_x / 2.0  # 0.2m
+        # L_y = self.wheel_separation_y / 2.0  # 0.2m
+        # R = self.wheel_radius  # 0.1m
         
-        # TRY: Different IK formulation
-        v_FL = (vx + vy - (L_x + L_y) * w) / R
-        v_FR = (vx - vy + (L_x + L_y) * w) / R
-        v_BL = (vx - vy - (L_x + L_y) * w) / R
-        v_BR = (vx + vy + (L_x + L_y) * w) / R
+        # # TRY: Different IK formulation
+        # v_FL = (vx + vy - (L_x + L_y) * w) / R
+        # v_FR = (vx - vy + (L_x + L_y) * w) / R
+        # v_BL = (vx - vy - (L_x + L_y) * w) / R
+        # v_BR = (vx + vy + (L_x + L_y) * w) / R
         
-        return v_FL, v_FR, v_BL, v_BR
+        # return v_FL, v_FR, v_BL, v_BR
+        """Simple test: just use vx for all wheels"""
+        # Ignore vy and w for now, just forward motion
+        v_all = 2 * (vx / self.wheel_radius)
+        
+        return v_all, v_all, v_all, v_all  # All same
 
     def call_attach_service_async(self, model1, link1, model2, link2):
         self.get_logger().info(f'Calling Attach Service: {model1} -> {model2}')

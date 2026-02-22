@@ -68,7 +68,7 @@
     </link>
 
     <!-- JOINT 1 -->
-    <joint name="arm_joint_1" type="revolute">
+    <joint name="arm_joint_1" type="fixed">
       <parent link="arm_base_link"/>
       <child link="arm_link_1"/>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -78,7 +78,7 @@
     </joint>
 
     <!-- JOINT 2 -->
-    <joint name="arm_joint_2" type="revolute">
+    <joint name="arm_joint_2" type="fixed">
       <parent link="arm_link_1"/>
       <child link="arm_link_2"/>
       <origin xyz="0 0 0.155" rpy="0 0 0"/>
