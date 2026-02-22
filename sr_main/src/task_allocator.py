@@ -26,7 +26,7 @@ class TaskAllocator(Node):
                 'crate': 'crate_red_1',
                 'pickup': {'x': 4.9, 'y': 4.7},        # Crate pickup location
                 'exchange': {'x': 1.5, 'y': 1.5},      # Exchange zone (lifter gives to runner)
-                'drop': {'x': 0.0, 'y': 0.0}           # Final drop zone
+                'drop': {'x': 4.9, 'y': -4.9}           # Final drop zone
             },
             {
                 'lifter': 'lifter2',
@@ -34,7 +34,7 @@ class TaskAllocator(Node):
                 'crate': 'crate_green_2',
                 'pickup': {'x': 4.9, 'y': 4.2},
                 'exchange': {'x': -1.5, 'y': 1.5},
-                'drop': {'x': -3.0, 'y': 0.0}
+                'drop': {'x': 4.6, 'y': -4.9}
             },
             {
                 'lifter': 'lifter3',
@@ -42,7 +42,7 @@ class TaskAllocator(Node):
                 'crate': 'crate_blue_3',
                 'pickup': {'x': 4.9, 'y': 3.7},
                 'exchange': {'x': 1.5, 'y': -1.5},
-                'drop': {'x': 0.0, 'y': -3.0}
+                'drop': {'x': 4.3, 'y': -4.9}
             },
             {
                 'lifter': 'lifter4',
@@ -50,7 +50,7 @@ class TaskAllocator(Node):
                 'crate': 'crate_yellow_4',
                 'pickup': {'x': 4.9, 'y': 3.2},
                 'exchange': {'x': -1.5, 'y': -1.5},
-                'drop': {'x': -3.0, 'y': -3.0}
+                'drop': {'x': 4.0, 'y': -4.9}
             }
         ]
 

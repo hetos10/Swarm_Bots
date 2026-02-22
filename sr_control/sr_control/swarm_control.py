@@ -90,7 +90,7 @@ class LifterController(Node):
         self.pid_theta = PID(kp=0.4, ki=0.0, kd=0.2, max_out=1.5)
 
         # Rotation should be even smoother to avoid throwing the crate
-        self.pid_theta = PID(kp=1.0, ki=0.0, kd=0.2, max_out=3.0)
+        # self.pid_theta = PID(kp=1.0, ki=0.0, kd=0.2, max_out=3.0)
 
         # ODOMETRY SUBSCRIBER
         self.odom_sub = self.create_subscription(Odometry, '/lifter1/odom', self.odom_callback, 10)

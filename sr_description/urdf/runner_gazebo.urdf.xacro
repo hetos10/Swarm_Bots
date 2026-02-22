@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="gazebo_setup_run" params="robot_ns">
+  <xacro:macro name="gazebo_setup_runner" params="robot_ns">
     <gazebo>
         <static>false</static>
     </gazebo>
- 
+
     <gazebo reference="wheel_fl_link">
       <mu1>0.8</mu1>
       <mu2>0.8</mu2>
@@ -35,49 +35,45 @@
     </gazebo>
 
     <gazebo>
-    
       <plugin filename="libignition-gazebo-joint-state-publisher-system.so" 
               name="ignition::gazebo::systems::JointStatePublisher">
       </plugin>
+
       <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
           <joint_name>wheel_fl_joint</joint_name>
-          <topic>/model/runner1/joint/wheel_fl_joint/cmd_vel</topic>
+          <cmd_vel_topic>/model/${robot_ns}/joint/wheel_fl_joint/cmd_vel</cmd_vel_topic>
       </plugin>
       <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
           <joint_name>wheel_fr_joint</joint_name>
-          <topic>/model/runner1/joint/wheel_fr_joint/cmd_vel</topic>
+          <cmd_vel_topic>/model/${robot_ns}/joint/wheel_fr_joint/cmd_vel</cmd_vel_topic>
       </plugin>
       <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
           <joint_name>wheel_bl_joint</joint_name>
-          <topic>/model/runner1/joint/wheel_bl_joint/cmd_vel</topic>
+          <cmd_vel_topic>/model/${robot_ns}/joint/wheel_bl_joint/cmd_vel</cmd_vel_topic>
       </plugin>
       <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
           <joint_name>wheel_br_joint</joint_name>
-          <topic>/model/runner1/joint/wheel_br_joint/cmd_vel</topic>
-      </plugin>
-
-      <plugin
-        filename="libignition_link_attacher.so"
-        name="ignition_link_attacher">
+          <cmd_vel_topic>/model/${robot_ns}/joint/wheel_br_joint/cmd_vel</cmd_vel_topic>
       </plugin>
 
       <plugin filename="libignition-gazebo-joint-controller-system.so"
               name="ignition::gazebo::systems::JointController">
           <joint_name>piston_rod_joint</joint_name>
-          <cmd_vel_topic>/model/runner1/joint/piston_rod_joint/cmd_vel</cmd_vel_topic>
+          <cmd_vel_topic>/model/${robot_ns}/joint/piston_rod_joint/cmd_vel</cmd_vel_topic>
       </plugin>
 
- 
+  
+
+      <plugin filename="libignition_link_attacher.so" name="ignition_link_attacher">
+      </plugin>
 
       <plugin filename="libignition-gazebo-odometry-publisher-system.so" name="ignition::gazebo::systems::OdometryPublisher">
-          <odom_topic>/runner1/odom</odom_topic>
+          <odom_topic>/${robot_ns}/odom</odom_topic>
           <odom_frame>odom</odom_frame>
           <robot_base_frame>base_footprint</robot_base_frame>
           <odom_publish_frequency>50</odom_publish_frequency>
       </plugin>
-
     </gazebo>
+    
   </xacro:macro>
-
-  
 </robot>

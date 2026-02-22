@@ -1,18 +1,19 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="runner_bot">
 
+  <xacro:arg name="robot_ns" default="runner1"/>
+
   <xacro:include filename="$(find sr_description)/urdf/material.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/base.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/wheel.urdf.xacro"/>
-  <xacro:include filename="$(find sr_description)/urdf/actuator.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/wall.urdf.xacro"/>
+  <xacro:include filename="$(find sr_description)/urdf/actuator.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/runner_gazebo.urdf.xacro"/>
 
   <xacro:create_base/>
   <xacro:create_wheels/>
-  <xacro:create_wall/>
   <xacro:create_piston/>
-  
-  <xacro:gazebo_setup_run robot_ns="runner1"/>
+  <xacro:create_wall/>
+  <xacro:gazebo_setup_runner robot_ns="$(arg robot_ns)" />
 
 </robot>

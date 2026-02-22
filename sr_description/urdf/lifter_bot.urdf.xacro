@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="lifter_bot">
 
+  <xacro:arg name="robot_ns" default="lifter1"/>
+
   <xacro:include filename="$(find sr_description)/urdf/material.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/base.urdf.xacro"/>
   <xacro:include filename="$(find sr_description)/urdf/wheel.urdf.xacro"/>
@@ -11,6 +13,6 @@
   <xacro:create_wheels/>
   <xacro:create_arm/>
   
-  <xacro:gazebo_setup_lift robot_ns="lifter1" />
+  <xacro:gazebo_setup_lift robot_ns="$(arg robot_ns)" />
 
 </robot>

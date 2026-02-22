@@ -34,7 +34,6 @@
       <kd>100.0</kd>
     </gazebo>
 
-    
     <gazebo>
       <plugin filename="libignition-gazebo-joint-state-publisher-system.so" 
               name="ignition::gazebo::systems::JointStatePublisher">
@@ -42,40 +41,38 @@
 
       <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
           <joint_name>wheel_fl_joint</joint_name>
-          <cmd_vel_topic>/model/lifter1/joint/wheel_fl_joint/cmd_vel</cmd_vel_topic>
+          <cmd_vel_topic>/model/${robot_ns}/joint/wheel_fl_joint/cmd_vel</cmd_vel_topic>
       </plugin>
       <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
           <joint_name>wheel_fr_joint</joint_name>
-          <cmd_vel_topic>/model/lifter1/joint/wheel_fr_joint/cmd_vel</cmd_vel_topic>
+          <cmd_vel_topic>/model/${robot_ns}/joint/wheel_fr_joint/cmd_vel</cmd_vel_topic>
       </plugin>
       <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
           <joint_name>wheel_bl_joint</joint_name>
-          <cmd_vel_topic>/model/lifter1/joint/wheel_bl_joint/cmd_vel</cmd_vel_topic>
+          <cmd_vel_topic>/model/${robot_ns}/joint/wheel_bl_joint/cmd_vel</cmd_vel_topic>
       </plugin>
       <plugin filename="libignition-gazebo-joint-controller-system.so" name="ignition::gazebo::systems::JointController">
           <joint_name>wheel_br_joint</joint_name>
-          <cmd_vel_topic>/model/lifter1/joint/wheel_br_joint/cmd_vel</cmd_vel_topic>
+          <cmd_vel_topic>/model/${robot_ns}/joint/wheel_br_joint/cmd_vel</cmd_vel_topic>
       </plugin>
 
       <plugin filename="libignition-gazebo-joint-controller-system.so"
               name="ignition::gazebo::systems::JointController">
           <joint_name>arm_joint_1</joint_name>
-          <cmd_vel_topic>/model/lifter1/joint/arm_joint_1/cmd_vel</cmd_vel_topic>
+          <cmd_vel_topic>/model/${robot_ns}/joint/arm_joint_1/cmd_vel</cmd_vel_topic>
       </plugin>
 
       <plugin filename="libignition-gazebo-joint-controller-system.so"
               name="ignition::gazebo::systems::JointController">
           <joint_name>arm_joint_2</joint_name>
-          <cmd_vel_topic>/model/lifter1/joint/arm_joint_2/cmd_vel</cmd_vel_topic>
+          <cmd_vel_topic>/model/${robot_ns}/joint/arm_joint_2/cmd_vel</cmd_vel_topic>
       </plugin>
 
-      <plugin
-        filename="libignition_link_attacher.so"
-        name="ignition_link_attacher">
+      <plugin filename="libignition_link_attacher.so" name="ignition_link_attacher">
       </plugin>
 
       <plugin filename="libignition-gazebo-odometry-publisher-system.so" name="ignition::gazebo::systems::OdometryPublisher">
-          <odom_topic>/lifter1/odom</odom_topic>
+          <odom_topic>/${robot_ns}/odom</odom_topic>
           <odom_frame>odom</odom_frame>
           <robot_base_frame>base_footprint</robot_base_frame>
           <odom_publish_frequency>50</odom_publish_frequency>
