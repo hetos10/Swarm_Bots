@@ -55,6 +55,18 @@
           <joint_name>wheel_br_joint</joint_name>
           <topic>/model/runner1/joint/wheel_br_joint/cmd_vel</topic>
       </plugin>
+      <plugin filename="libignition-gazebo-link-attacher-system.so"
+        name="ignition::gazebo::systems::LinkAttacher">
+      </plugin>
+
+      <plugin filename="libignition-gazebo-joint-controller-system.so"
+              name="ignition::gazebo::systems::JointController">
+          <joint_name>piston_rod_joint</joint_name>
+          <cmd_vel_topic>/model/runner1/joint/piston_rod_joint/cmd_vel</cmd_vel_topic>
+      </plugin>
+
+ 
+
       <plugin filename="libignition-gazebo-odometry-publisher-system.so" name="ignition::gazebo::systems::OdometryPublisher">
           <odom_topic>/runner1/odom</odom_topic>
           <odom_frame>odom</odom_frame>

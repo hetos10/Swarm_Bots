@@ -71,7 +71,7 @@ class LifterController(Node):
         self.exchange_x = 0.0
         self.exchange_y = 0.0
         
-        self.max_vel = 7.0  # SLOW movement
+        self.max_vel = 5.0  # SLOW movement
         
         # HOME POSITION
         self.home = {'x': -4.5, 'y': 4.0, 'theta': 0.0}
@@ -89,8 +89,8 @@ class LifterController(Node):
         self.wheel_separation_y = 0.4
 
         # PID CONTROLLERS - SMOOTH gains
-        self.pid_x = PID(kp=0.2, ki=0.00005, kd=0.1, max_out=self.max_vel)
-        self.pid_theta = PID(kp=0.2, ki=0.000005, kd=0.1, max_out=5.0)
+        self.pid_x = PID(kp=0.3, ki=0.0, kd=0.0, max_out=self.max_vel)
+        self.pid_theta = PID(kp=0.3, ki=0.0, kd=0.0, max_out=3.5)
 
         # ODOMETRY SUBSCRIBER
         self.odom_sub = self.create_subscription(Odometry, '/lifter1/odom', self.odom_callback, 10)
@@ -240,7 +240,7 @@ class LifterController(Node):
             if elapsed > 1.5:
                 if should_log:
                     self.get_logger().info('[ATTACHING] Crate...')
-                future = self.call_attach_service("lifter1", "arm_link_2", "crate", "box_link")
+                future = self.call_attach_service("lifter1", "arm_link_2", "crate_red_1", "box_link")
                 if future:
                     self.attach_future = future
                     self.state = 'attaching_crate'
@@ -273,7 +273,7 @@ class LifterController(Node):
                 self.arm_base = 1.57
                 self.arm_elbow = 1.57
                 self.publish_arm()
-                future = self.call_detach_service("lifter1", "arm_link_2", "crate", "box_link")
+                future = self.call_detach_service("lifter1", "arm_link_2", "crate_red_1", "box_link")
                 if future:
                     self.detach_future = future
                     self.state = 'detaching_at_exchange'

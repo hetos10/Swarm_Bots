@@ -9,11 +9,11 @@
       <!-- Inertia -->
       <inertial>
         <origin xyz="0 0 0.1" rpy="0 0 0"/>
-        <mass value="0.5"/>
+        <mass value="0.25"/>
         <inertia
-          ixx="0.01" ixy="0.0" ixz="0.0"
-          iyy="0.01" iyz="0.0"
-          izz="0.01"/>
+          ixx="0.00052083" ixy="0.0" ixz="0.0"
+          iyy="0.00052083" iyz="0.0"
+          izz="0.00010417"/>
       </inertial>
 
       <!-- Visual -->
@@ -41,11 +41,11 @@
       <!-- Inertia -->
       <inertial>
         <origin xyz="0 0 0.1" rpy="0 0 0"/>
-        <mass value="0.35"/>
+        <mass value="0.12"/>
         <inertia
-          ixx="0.005" ixy="0.0" ixz="0.0"
-          iyy="0.005" iyz="0.0"
-          izz="0.005"/>
+          ixx="0.000116" ixy="0.0" ixz="0.0"
+          iyy="0.000116" iyz="0.0"
+          izz="0.000032"/>
       </inertial>
 
       <!-- Visual -->

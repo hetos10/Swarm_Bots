@@ -57,6 +57,22 @@
           <cmd_vel_topic>/model/lifter1/joint/wheel_br_joint/cmd_vel</cmd_vel_topic>
       </plugin>
 
+      <plugin filename="libignition-gazebo-joint-controller-system.so"
+              name="ignition::gazebo::systems::JointController">
+          <joint_name>arm_joint_1</joint_name>
+          <cmd_vel_topic>/model/lifter1/joint/arm_joint_1/cmd_vel</cmd_vel_topic>
+      </plugin>
+
+      <plugin filename="libignition-gazebo-joint-controller-system.so"
+              name="ignition::gazebo::systems::JointController">
+          <joint_name>arm_joint_2</joint_name>
+          <cmd_vel_topic>/model/lifter1/joint/arm_joint_2/cmd_vel</cmd_vel_topic>
+      </plugin>
+
+      <plugin filename="libignition-gazebo-link-attacher-system.so"
+        name="ignition::gazebo::systems::LinkAttacher">
+      </plugin>
+
       <plugin filename="libignition-gazebo-odometry-publisher-system.so" name="ignition::gazebo::systems::OdometryPublisher">
           <odom_topic>/lifter1/odom</odom_topic>
           <odom_frame>odom</odom_frame>
