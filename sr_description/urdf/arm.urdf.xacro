@@ -79,12 +79,25 @@
 
     <!-- ================= GRIPPER LINK (EMPTY - FOR GRABBING) ================= -->
     <link name="gripper_link">
+      <visual>
+          <origin xyz="0 0 0.01" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="0.035" length="0.02"/>
+          </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0.01" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.035" length="0.02"/>
+        </geometry>
+      </collision>
       <inertial>
         <origin xyz="0 0 0"/>
         <mass value="0.01"/>
         <inertia ixx="0.00001" iyy="0.00001" izz="0.00001" ixy="0" ixz="0" iyz="0"/>
       </inertial>
     </link>
+
   </xacro:macro>
 
 </robot>   

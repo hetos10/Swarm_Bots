@@ -266,7 +266,7 @@ class LifterController(Node):
             if elapsed > 2.0:
                 if should_log:
                     self.get_logger().info('[ATTACHING] Calling attach service...')
-                future = self.call_attach_service("lifter1", "arm_link_2", "crate_red_1", "box_link")
+                future = self.call_attach_service("lifter1", "gripper_link", "crate_red_1", "box_link")
                 if future:
                     self.attach_future = future
                     self.state = 'waiting_for_attach'
@@ -370,7 +370,7 @@ class LifterController(Node):
             if elapsed > 2.0:
                 if should_log:
                     self.get_logger().info('[DETACHING] Calling detach service...')
-                future = self.call_detach_service("lifter1", "arm_link_2", "crate_red_1", "box_link")
+                future = self.call_detach_service("lifter1", "gripper_link", "crate_red_1", "box_link")
                 if future:
                     self.detach_future = future
                     self.state = 'waiting_for_detach'
