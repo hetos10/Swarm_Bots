@@ -71,7 +71,6 @@ class LifterController(Node):
         self.exchange_x = 0.0
         self.exchange_y = 0.0
         
-        self.max_vel = 5.0  # SLOW movement
         
         # HOME POSITION
         self.home = {'x': -4.5, 'y': 4.0, 'theta': 0.0}
@@ -87,10 +86,11 @@ class LifterController(Node):
         # WHEEL PARAMETERS
         self.wheel_radius = 0.1
         self.wheel_separation_y = 0.4
+        self.pid_x = PID(kp=0.4, ki=0.0, kd=0.2, max_out=2.0)
+        self.pid_theta = PID(kp=0.4, ki=0.0, kd=0.2, max_out=1.5)
 
-        # PID CONTROLLERS - SMOOTH gains
-        self.pid_x = PID(kp=0.3, ki=0.0, kd=0.0, max_out=self.max_vel)
-        self.pid_theta = PID(kp=0.3, ki=0.0, kd=0.0, max_out=3.5)
+        # Rotation should be even smoother to avoid throwing the crate
+        self.pid_theta = PID(kp=1.0, ki=0.0, kd=0.2, max_out=3.0)
 
         # ODOMETRY SUBSCRIBER
         self.odom_sub = self.create_subscription(Odometry, '/lifter1/odom', self.odom_callback, 10)
@@ -210,7 +210,7 @@ class LifterController(Node):
             return
 
         # KEEP ARM RAISED during movement
-        if self.state in ['moving_to_crate', 'attaching_crate', 'moving_to_exchange', 'detaching_at_exchange', 'returning_home']:
+        if self.state in ['moving_to_crate', 'moving_to_exchange', 'returning_home']:
             self.arm_base = 0.0
             self.arm_elbow = 0.0
             self.publish_arm()
@@ -222,43 +222,99 @@ class LifterController(Node):
             if should_log:
                 self.get_logger().info(f'[MOVING] To crate: Dist={dist:.2f}m Pos=({self.current_x:.2f},{self.current_y:.2f})')
             
-            if dist < 0.32:
+            if dist < 0.3:
                 if should_log:
-                    self.get_logger().info('✓ Crate reached! Lowering arm...')
+                    self.get_logger().info('✓ Crate reached! Stopping robot...')
                 self.publish_wheels(0.0, 0.0)
-                self.arm_base = 1.57
-                self.arm_elbow = 1.57
+                self.arm_base = 0.0
+                self.arm_elbow = 0.0
                 self.publish_arm()
-                self.state = 'lowering_for_crate'
+                self.state = 'waiting_before_lower'
                 self.timer = now
             else:
                 self.publish_wheels(vx, w)
 
-        elif self.state == 'lowering_for_crate':
+        elif self.state == 'waiting_before_lower':
+            """WAIT before lowering arm - robot completely stopped"""
             self.publish_wheels(0.0, 0.0)
             elapsed = (now - self.timer).nanoseconds / 1e9
-            if elapsed > 1.5:
+            
+            if should_log:
+                self.get_logger().info(f'[WAITING] Before lower: {elapsed:.1f}s elapsed (wait 2.0s)')
+            
+            if elapsed > 2.0:
                 if should_log:
-                    self.get_logger().info('[ATTACHING] Crate...')
+                    self.get_logger().info('[LOWERING] Arm now...')
+                self.arm_base = 1.57
+                self.arm_elbow = 0.0
+                self.publish_arm()
+                self.state = 'lowering_for_crate'
+                self.timer = now
+
+        elif self.state == 'lowering_for_crate':
+            """Lower arm and wait for it to reach crate"""
+            self.publish_wheels(0.0, 0.0)
+            self.arm_base = 1.57
+            self.arm_elbow = 0.0
+            self.publish_arm()
+            
+            elapsed = (now - self.timer).nanoseconds / 1e9
+            
+            if should_log:
+                self.get_logger().info(f'[LOWERING] Arm: {elapsed:.1f}s elapsed (wait 2.0s for arm to lower)')
+            
+            if elapsed > 2.0:
+                if should_log:
+                    self.get_logger().info('[ATTACHING] Calling attach service...')
                 future = self.call_attach_service("lifter1", "arm_link_2", "crate_red_1", "box_link")
                 if future:
                     self.attach_future = future
-                    self.state = 'attaching_crate'
+                    self.state = 'waiting_for_attach'
                     self.timer = now
 
-        elif self.state == 'attaching_crate':
+        elif self.state == 'waiting_for_attach':
+            """WAIT for attach service response - robot COMPLETELY STOPPED"""
             self.publish_wheels(0.0, 0.0)
+            self.arm_base = 1.57
+            self.arm_elbow = 0.0
+            self.publish_arm()
+            
+            elapsed = (now - self.timer).nanoseconds / 1e9
+            
+            if should_log:
+                self.get_logger().info(f'[WAITING_ATTACH] Service response: {elapsed:.1f}s')
+            
             if self.attach_future and self.attach_future.done():
                 try:
-                    self.attach_future.result()
+                    result = self.attach_future.result()
                     if should_log:
-                        self.get_logger().info('✓ Crate attached! Moving to exchange...')
-                    self.state = 'moving_to_exchange'
-                    self.pid_x.reset()
-                    self.pid_theta.reset()
+                        self.get_logger().info('✓✓✓ CRATE ATTACHED! Now lifting...')
+                    self.state = 'lifting_after_attach'
+                    self.timer = now
                     self.attach_future = None
-                except:
+                except Exception as e:
+                    if should_log:
+                        self.get_logger().error(f'✗ Attach failed: {e}')
                     self.state = 'lowering_for_crate'
+
+        elif self.state == 'lifting_after_attach':
+            """Lift arm with crate - robot still stopped"""
+            self.publish_wheels(0.0, 0.0)
+            self.arm_base = 0.0
+            self.arm_elbow = 0.0
+            self.publish_arm()
+            
+            elapsed = (now - self.timer).nanoseconds / 1e9
+            
+            if should_log:
+                self.get_logger().info(f'[LIFTING] Crate: {elapsed:.1f}s (wait 2.0s for lift)')
+            
+            if elapsed > 2.0:
+                if should_log:
+                    self.get_logger().info('✓ Arm raised with crate! Now moving to exchange...')
+                self.state = 'moving_to_exchange'
+                self.pid_x.reset()
+                self.pid_theta.reset()
 
         elif self.state == 'moving_to_exchange':
             vx, w, dist = self.move_to_target(self.exchange_x, self.exchange_y, dt)
@@ -266,34 +322,102 @@ class LifterController(Node):
             if should_log:
                 self.get_logger().info(f'[MOVING] To exchange: Dist={dist:.2f}m Pos=({self.current_x:.2f},{self.current_y:.2f})')
             
-            if dist < 0.1:
+            if dist < 0.15:
                 if should_log:
-                    self.get_logger().info('✓ At exchange! Detaching crate...')
+                    self.get_logger().info('✓ At exchange! Stopping robot...')
                 self.publish_wheels(0.0, 0.0)
-                self.arm_base = 1.57
-                self.arm_elbow = 1.57
+                self.arm_base = 0.0
+                self.arm_elbow = 0.0
                 self.publish_arm()
-                future = self.call_detach_service("lifter1", "arm_link_2", "crate_red_1", "box_link")
-                if future:
-                    self.detach_future = future
-                    self.state = 'detaching_at_exchange'
-                    self.timer = now
+                self.state = 'waiting_before_detach'
+                self.timer = now
             else:
                 self.publish_wheels(vx, w)
 
-        elif self.state == 'detaching_at_exchange':
+        elif self.state == 'waiting_before_detach':
+            """WAIT before lowering/detaching"""
             self.publish_wheels(0.0, 0.0)
+            self.arm_base = 0.0
+            self.arm_elbow = 0.0
+            self.publish_arm()
+            
+            elapsed = (now - self.timer).nanoseconds / 1e9
+            
+            if should_log:
+                self.get_logger().info(f'[WAITING] Before detach: {elapsed:.1f}s (wait 1.0s)')
+            
+            if elapsed > 1.0:
+                if should_log:
+                    self.get_logger().info('[LOWERING] Arm for detach...')
+                self.arm_base = 1.57
+                self.arm_elbow = 0.0
+                self.publish_arm()
+                self.state = 'lowering_for_detach'
+                self.timer = now
+
+        elif self.state == 'lowering_for_detach':
+            """Lower arm at exchange"""
+            self.publish_wheels(0.0, 0.0)
+            self.arm_base = 1.57
+            self.arm_elbow = 0.0
+            self.publish_arm()
+            
+            elapsed = (now - self.timer).nanoseconds / 1e9
+            
+            if should_log:
+                self.get_logger().info(f'[LOWERING] For detach: {elapsed:.1f}s (wait 2.0s)')
+            
+            if elapsed > 2.0:
+                if should_log:
+                    self.get_logger().info('[DETACHING] Calling detach service...')
+                future = self.call_detach_service("lifter1", "arm_link_2", "crate_red_1", "box_link")
+                if future:
+                    self.detach_future = future
+                    self.state = 'waiting_for_detach'
+                    self.timer = now
+
+        elif self.state == 'waiting_for_detach':
+            """WAIT for detach service response"""
+            self.publish_wheels(0.0, 0.0)
+            self.arm_base = 1.57
+            self.arm_elbow = 0.0
+            self.publish_arm()
+            
+            elapsed = (now - self.timer).nanoseconds / 1e9
+            
+            if should_log:
+                self.get_logger().info(f'[WAITING_DETACH] Service response: {elapsed:.1f}s')
+            
             if self.detach_future and self.detach_future.done():
                 try:
-                    self.detach_future.result()
+                    result = self.detach_future.result()
                     if should_log:
-                        self.get_logger().info('✓ Crate detached! Returning home...')
-                    self.state = 'returning_home'
-                    self.pid_x.reset()
-                    self.pid_theta.reset()
+                        self.get_logger().info('✓✓✓ CRATE DETACHED! Returning home...')
+                    self.state = 'raising_after_detach'
+                    self.timer = now
                     self.detach_future = None
-                except:
-                    pass
+                except Exception as e:
+                    if should_log:
+                        self.get_logger().error(f'✗ Detach failed: {e}')
+
+        elif self.state == 'raising_after_detach':
+            """Raise arm after detach"""
+            self.publish_wheels(0.0, 0.0)
+            self.arm_base = 0.0
+            self.arm_elbow = 0.0
+            self.publish_arm()
+            
+            elapsed = (now - self.timer).nanoseconds / 1e9
+            
+            if should_log:
+                self.get_logger().info(f'[RAISING] After detach: {elapsed:.1f}s (wait 1.5s)')
+            
+            if elapsed > 1.5:
+                if should_log:
+                    self.get_logger().info('[RETURNING] Home now...')
+                self.state = 'returning_home'
+                self.pid_x.reset()
+                self.pid_theta.reset()
 
         elif self.state == 'returning_home':
             vx, w, dist = self.move_to_target(self.home['x'], self.home['y'], dt)
@@ -307,10 +431,12 @@ class LifterController(Node):
                     self.get_logger().info('✓✓✓ MISSION COMPLETE!')
                     self.get_logger().info('='*70)
                 self.publish_wheels(0.0, 0.0)
+                self.arm_base = 0.0
+                self.arm_elbow = 0.0
+                self.publish_arm()
                 self.state = 'done'
             else:
                 self.publish_wheels(vx, w)
-
 
 def main(args=None):
     rclpy.init(args=args)

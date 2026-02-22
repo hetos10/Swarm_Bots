@@ -13,13 +13,13 @@
   direction: GZ_TO_ROS
 
 # Arm Joint Commands
-- ros_topic_name: "/lifter1/arm_joint_1/cmd_vel"
+- ros_topic_name: "/model/lifter1/joint/arm_joint_1/cmd_vel"
   gz_topic_name: "/model/lifter1/joint/arm_joint_1/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
 
-- ros_topic_name: "/lifter1/arm_joint_2/cmd_vel"
+- ros_topic_name: "/model/lifter1/joint/arm_joint_2/cmd_vel"
   gz_topic_name: "/model/lifter1/joint/arm_joint_2/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
@@ -65,17 +65,12 @@
   direction: GZ_TO_ROS
 
 # Arm Joint Commands
-- ros_topic_name: "/runner1/arm_joint_1/cmd_vel"
-  gz_topic_name: "/model/runner1/joint/arm_joint_1/cmd_vel"
+- ros_topic_name: "/model/lifter1/joint/piston_rod_joint/cmd_vel"
+  gz_topic_name: "/model/lifter1/joint/piston_rod_joint/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
 
-- ros_topic_name: "/runner1/arm_joint_2/cmd_vel"
-  gz_topic_name: "/model/runner1/joint/arm_joint_2/cmd_vel"
-  ros_type_name: "std_msgs/msg/Float64"
-  gz_type_name: "ignition.msgs.Double"
-  direction: ROS_TO_GZ
 
 # Wheel Velocity Commands (Required by your Python Script)
 - ros_topic_name: "/model/runner1/joint/wheel_fl_joint/cmd_vel"

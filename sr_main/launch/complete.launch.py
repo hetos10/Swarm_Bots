@@ -29,7 +29,7 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     # 1. Setup Environment and Gazebo World (Same as your file)
-    world_path = os.path.join(sr_gazebo, "worlds", "map.world") # Adjust name if needed
+    world_path = os.path.join(sr_gazebo, "worlds", "map2.world") # Adjust name if needed
     
     gazebo_resource_path = SetEnvironmentVariable(
         name='GZ_SIM_RESOURCE_PATH',

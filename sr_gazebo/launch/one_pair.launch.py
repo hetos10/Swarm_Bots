@@ -46,7 +46,7 @@ def generate_launch_description():
     world_arg = DeclareLaunchArgument(
         name="world",
         default_value=os.path.join(
-            sr_gazebo, "worlds", "map.world"
+            sr_gazebo, "worlds", "map1.world"
         ),
         description="Full path to world file"
     )
