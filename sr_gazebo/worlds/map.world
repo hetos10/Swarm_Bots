@@ -87,7 +87,7 @@
           <cast_shadows>true</cast_shadows>
           <geometry>
             <box>
-              <size>0.25 0.25 0.25</size>
+              <size>0.18 0.18 0.18</size>
             </box>
           </geometry>
           <material>
@@ -103,7 +103,7 @@
           <pose>0 0 0 0 0 0</pose>
           <geometry>
             <box>
-              <size>0.25 0.25 0.25</size>
+              <size>0.18 0.18 0.18</size>
             </box>
           </geometry>
           <surface>
@@ -130,12 +130,12 @@
         
         <!-- ===== INERTIAL (Mass and Moment) ===== -->
         <inertial>
-          <mass>0.1</mass>
+          <mass>0.08</mass>
           <pose>0 0 0 0 0 0</pose>
           <inertia>
-            <ixx>0.04167</ixx>
-            <iyy>0.04167</iyy>
-            <izz>0.04167</izz>
+            <ixx>0.00083333</ixx>
+            <iyy>0.00083333</iyy>
+            <izz>0.00083333</izz>
             <ixy>0.0</ixy>
             <ixz>0.0</ixz>
             <iyz>0.0</iyz>
@@ -156,7 +156,7 @@
           <cast_shadows>true</cast_shadows>
           <geometry>
             <box>
-              <size>0.25 0.25 0.25</size>
+              <size>0.18 0.18 0.18</size>
             </box>
           </geometry>
           <material>
@@ -172,7 +172,7 @@
           <pose>0 0 0 0 0 0</pose>
           <geometry>
             <box>
-              <size>0.25 0.25 0.25</size>
+              <size>0.18 0.18 0.18</size>
             </box>
           </geometry>
           <surface>
@@ -199,12 +199,12 @@
         
         <!-- ===== INERTIAL (Mass and Moment) ===== -->
         <inertial>
-          <mass>0.1</mass>
+          <mass>0.08</mass>
           <pose>0 0 0 0 0 0</pose>
           <inertia>
-            <ixx>0.04167</ixx>
-            <iyy>0.04167</iyy>
-            <izz>0.04167</izz>
+            <ixx>0.00083333</ixx>
+            <iyy>0.00083333</iyy>
+            <izz>0.00083333</izz>
             <ixy>0.0</ixy>
             <ixz>0.0</ixz>
             <iyz>0.0</iyz>
@@ -225,7 +225,7 @@
           <cast_shadows>true</cast_shadows>
           <geometry>
             <box>
-              <size>0.25 0.25 0.25</size>
+              <size>0.18 0.18 0.18</size>
             </box>
           </geometry>
           <material>
@@ -241,7 +241,7 @@
           <pose>0 0 0 0 0 0</pose>
           <geometry>
             <box>
-              <size>0.25 0.25 0.25</size>
+              <size>0.18 0.18 0.18</size>
             </box>
           </geometry>
           <surface>
@@ -268,12 +268,12 @@
         
         <!-- ===== INERTIAL (Mass and Moment) ===== -->
         <inertial>
-          <mass>0.1</mass>
+          <mass>0.08</mass>
           <pose>0 0 0 0 0 0</pose>
           <inertia>
-            <ixx>0.04167</ixx>
-            <iyy>0.04167</iyy>
-            <izz>0.04167</izz>
+            <ixx>0.00083333</ixx>
+            <iyy>0.00083333</iyy>
+            <izz>0.00083333</izz>
             <ixy>0.0</ixy>
             <ixz>0.0</ixz>
             <iyz>0.0</iyz>
@@ -294,7 +294,7 @@
           <cast_shadows>true</cast_shadows>
           <geometry>
             <box>
-              <size>0.25 0.25 0.25</size>
+              <size>0.18 0.18 0.18</size>
             </box>
           </geometry>
           <material>
@@ -310,7 +310,7 @@
           <pose>0 0 0 0 0 0</pose>
           <geometry>
             <box>
-              <size>0.25 0.25 0.25</size>
+              <size>0.18 0.18 0.18</size>
             </box>
           </geometry>
           <surface>
@@ -337,12 +337,12 @@
         
         <!-- ===== INERTIAL (Mass and Moment) ===== -->
         <inertial>
-          <mass>0.1</mass>
+          <mass>0.08</mass>
           <pose>0 0 0 0 0 0</pose>
           <inertia>
-            <ixx>0.04167</ixx>
-            <iyy>0.04167</iyy>
-            <izz>0.04167</izz>
+            <ixx>0.00083333</ixx>
+            <iyy>0.00083333</iyy>
+            <izz>0.00083333</izz>
             <ixy>0.0</ixy>
             <ixz>0.0</ixz>
             <iyz>0.0</iyz>
