@@ -17,13 +17,13 @@
   gz_type_name: "ignition.msgs.Odometry"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/lifter1/arm_joint_1/cmd_vel"
+- ros_topic_name: "/model/lifter1/joint/arm_joint_1/cmd_vel"
   gz_topic_name: "/model/lifter1/joint/arm_joint_1/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
 
-- ros_topic_name: "/lifter1/arm_joint_2/cmd_vel"
+- ros_topic_name: "/model/lifter1/joint/arm_joint_2/cmd_vel"
   gz_topic_name: "/model/lifter1/joint/arm_joint_2/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
@@ -60,13 +60,13 @@
   gz_type_name: "ignition.msgs.Odometry"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/lifter2/arm_joint_1/cmd_vel"
+- ros_topic_name: "/model/lifter2/joint/arm_joint_1/cmd_vel"
   gz_topic_name: "/model/lifter2/joint/arm_joint_1/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
 
-- ros_topic_name: "/lifter2/arm_joint_2/cmd_vel"
+- ros_topic_name: "/model/lifter2/joint/arm_joint_2/cmd_vel"
   gz_topic_name: "/model/lifter2/joint/arm_joint_2/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
@@ -103,13 +103,13 @@
   gz_type_name: "ignition.msgs.Odometry"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/lifter3/arm_joint_1/cmd_vel"
+- ros_topic_name: "/model/lifter3/joint/arm_joint_1/cmd_vel"
   gz_topic_name: "/model/lifter3/joint/arm_joint_1/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
 
-- ros_topic_name: "/lifter3/arm_joint_2/cmd_vel"
+- ros_topic_name: "/model/lifter3/joint/arm_joint_2/cmd_vel"
   gz_topic_name: "/model/lifter3/joint/arm_joint_2/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
@@ -146,13 +146,13 @@
   gz_type_name: "ignition.msgs.Odometry"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/lifter4/arm_joint_1/cmd_vel"
+- ros_topic_name: "/model/lifter4/joint/arm_joint_1/cmd_vel"
   gz_topic_name: "/model/lifter4/joint/arm_joint_1/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
 
-- ros_topic_name: "/lifter4/arm_joint_2/cmd_vel"
+- ros_topic_name: "/model/lifter4/joint/arm_joint_2/cmd_vel"
   gz_topic_name: "/model/lifter4/joint/arm_joint_2/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
@@ -193,14 +193,8 @@
   gz_type_name: "ignition.msgs.Odometry"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/runner1/arm_joint_1/cmd_vel"
-  gz_topic_name: "/model/runner1/joint/arm_joint_1/cmd_vel"
-  ros_type_name: "std_msgs/msg/Float64"
-  gz_type_name: "ignition.msgs.Double"
-  direction: ROS_TO_GZ
-
-- ros_topic_name: "/runner1/arm_joint_2/cmd_vel"
-  gz_topic_name: "/model/runner1/joint/arm_joint_2/cmd_vel"
+- ros_topic_name: "/model/runner1/joint/piston_rod_joint/cmd_vel"
+  gz_topic_name: "/model/runner1/joint/piston_rod_joint/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
@@ -236,14 +230,8 @@
   gz_type_name: "ignition.msgs.Odometry"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/runner2/arm_joint_1/cmd_vel"
-  gz_topic_name: "/model/runner2/joint/arm_joint_1/cmd_vel"
-  ros_type_name: "std_msgs/msg/Float64"
-  gz_type_name: "ignition.msgs.Double"
-  direction: ROS_TO_GZ
-
-- ros_topic_name: "/runner2/arm_joint_2/cmd_vel"
-  gz_topic_name: "/model/runner2/joint/arm_joint_2/cmd_vel"
+- ros_topic_name: "/model/runner2/joint/piston_rod_joint/cmd_vel"
+  gz_topic_name: "/model/runner2/joint/piston_rod_joint/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
@@ -279,17 +267,12 @@
   gz_type_name: "ignition.msgs.Odometry"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/runner3/arm_joint_1/cmd_vel"
-  gz_topic_name: "/model/runner3/joint/arm_joint_1/cmd_vel"
+- ros_topic_name: "/model/runner3/joint/piston_rod_joint/cmd_vel"
+  gz_topic_name: "/model/runner3/joint/piston_rod_joint/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
 
-- ros_topic_name: "/runner3/arm_joint_2/cmd_vel"
-  gz_topic_name: "/model/runner3/joint/arm_joint_2/cmd_vel"
-  ros_type_name: "std_msgs/msg/Float64"
-  gz_type_name: "ignition.msgs.Double"
-  direction: ROS_TO_GZ
 
 - ros_topic_name: "/model/runner3/joint/wheel_fl_joint/cmd_vel"
   gz_topic_name: "/model/runner3/joint/wheel_fl_joint/cmd_vel"
@@ -322,17 +305,12 @@
   gz_type_name: "ignition.msgs.Odometry"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/runner4/arm_joint_1/cmd_vel"
-  gz_topic_name: "/model/runner4/joint/arm_joint_1/cmd_vel"
+- ros_topic_name: "/model/runner4/joint/piston_rod_joint/cmd_vel"
+  gz_topic_name: "/model/runner4/joint/piston_rod_joint/cmd_vel"
   ros_type_name: "std_msgs/msg/Float64"
   gz_type_name: "ignition.msgs.Double"
   direction: ROS_TO_GZ
 
-- ros_topic_name: "/runner4/arm_joint_2/cmd_vel"
-  gz_topic_name: "/model/runner4/joint/arm_joint_2/cmd_vel"
-  ros_type_name: "std_msgs/msg/Float64"
-  gz_type_name: "ignition.msgs.Double"
-  direction: ROS_TO_GZ
 
 - ros_topic_name: "/model/runner4/joint/wheel_fl_joint/cmd_vel"
   gz_topic_name: "/model/runner4/joint/wheel_fl_joint/cmd_vel"
