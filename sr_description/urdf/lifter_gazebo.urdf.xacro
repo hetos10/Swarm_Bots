@@ -69,8 +69,6 @@
       </plugin>
 
       <plugin filename="libignition_link_attacher.so" name="ignition_link_attacher">
-          <attach_distance>0.15</attach_distance>
-          <detach_distance>0.2</detach_distance>
       </plugin>
 
       <plugin filename="libignition-gazebo-odometry-publisher-system.so" name="ignition::gazebo::systems::OdometryPublisher">

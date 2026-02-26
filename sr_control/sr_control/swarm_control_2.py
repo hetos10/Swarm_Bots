@@ -266,13 +266,13 @@ class MultiRobotController(Node):
         # ========== LIFTER STATE MACHINE ==========
         if self.lifter_state == 'moving_to_crate':
             vx, w, dist, _ = self.move_to_target(self.lifter_x, self.lifter_y, self.lifter_theta, 
-                                                   self.crate_x - 0.33, self.crate_y , 
+                                                   self.crate_x - 0.33, self.crate_y + 0.16, 
                                                    self.lifter_pid_x, self.lifter_pid_theta, dt)
             
             if should_log:
                 self.get_logger().info(f'[LIFTER] Moving to crate: Dist={dist:.2f}m')
             
-            if dist < 0.2:
+            if dist < 0.3:
                 if should_log:
                     self.get_logger().info('✓ LIFTER: Crate reached! Waiting...')
                 self.publish_lifter_wheels(0.0, 0.0)
