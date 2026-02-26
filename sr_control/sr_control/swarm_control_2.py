@@ -334,50 +334,81 @@ class MultiRobotController(Node):
                     self.lifter_timer = now
 
         elif self.lifter_state == 'crate_attached':
-            # ✅ CRATE IS ATTACHED - STILL NO MOVEMENT!
-            # Keep wheels at zero and arm down for stability
+           
             self.publish_lifter_wheels(0.0, 0.0)  # ✅ ZERO VELOCITY
             self.lifter_arm_base = 1.57
             self.lifter_arm_elbow = 1.57
             self.publish_lifter_arm()
             
             elapsed = (now - self.lifter_timer).nanoseconds / 1e9
-            if elapsed > 0.5:  # ✅ Wait 0.5s for physics to settle
+            if elapsed > 2.0:  # ✅ Wait 0.5s for physics to settle
                 if should_log:
                     self.get_logger().info('[LIFTER] Crate secured - lifting arm...')
                 self.lifter_state = 'lifting_after_attach'
                 self.lifter_timer = now
 
         elif self.lifter_state == 'lifting_after_attach':
-            # ✅ NOW LIFT ARM - WHEELS STILL AT ZERO
-            self.publish_lifter_wheels(0.0, 0.0)  # ✅ ZERO VELOCITY
-            self.lifter_arm_base = 0.0  # ✅ RAISE ARM GRADUALLY
+                    # ✅ GRADUAL ARM LIFTING - NOT INSTANT!
+                    self.publish_lifter_wheels(0.0, 0.0)
+                    
+                    elapsed = (now - self.lifter_timer).nanoseconds / 1e9
+                    
+                    # ✅ Gradually raise arm from 1.57 to 0 over 3 seconds
+                    if elapsed < 3.0:
+                        progress = elapsed / 3.0  # 0 to 1
+                        self.lifter_arm_base = 1.57 * (1.0 - progress)
+                        self.lifter_arm_elbow = 0.0
+                        self.publish_lifter_arm()
+                        
+                        if should_log and elapsed < 0.1:
+                            self.get_logger().info('[LIFTER] Lifting arm gradually...')
+                    else:
+                        # Arm fully raised
+                        self.lifter_arm_base = 0.0
+                        self.lifter_arm_elbow = 0.0
+                        self.publish_lifter_arm()
+                        
+                        if should_log:
+                            self.get_logger().info('✓ LIFTER: Arm fully raised! Preparing to move...')
+                        
+                        self.lifter_state = 'waiting_before_move'  # ✅ NEW STATE
+                        self.lifter_timer = now
+
+        elif self.lifter_state == 'waiting_before_move':
+            # ✅ NEW STATE: Wait before moving (let physics fully settle)
+            self.publish_lifter_wheels(0.0, 0.0)
+            self.lifter_arm_base = 0.0
             self.lifter_arm_elbow = 0.0
             self.publish_lifter_arm()
+            
             elapsed = (now - self.lifter_timer).nanoseconds / 1e9
-            if elapsed > 2.0:
+            if elapsed > 1.0:  # ✅ Wait 1 second before moving
                 if should_log:
-                    self.get_logger().info('✓ LIFTER: Arm raised! Moving to exchange...')
+                    self.get_logger().info('✓ LIFTER: Moving to exchange...')
                 self.lifter_state = 'moving_to_exchange'
                 self.lifter_pid_x.reset()
                 self.lifter_pid_theta.reset()
 
         elif self.lifter_state == 'moving_to_exchange':
-            vx, w, dist, _ = self.move_to_target(self.lifter_x, self.lifter_y, self.lifter_theta,
-                                                   self.exchange_x, self.exchange_y,
-                                                   self.lifter_pid_x, self.lifter_pid_theta, dt)
-            
-            if should_log:
-                self.get_logger().info(f'[LIFTER] Moving to exchange: Dist={dist:.2f}m')
-            
-            if dist < 0.25:
-                if should_log:
-                    self.get_logger().info('✓ LIFTER: At exchange! Waiting for runner...')
-                self.publish_lifter_wheels(0.0, 0.0)
-                self.lifter_state = 'waiting_for_runner_pickup'
-                self.lifter_timer = now
-            else:
-                self.publish_lifter_wheels(vx, w)
+                    vx, w, dist, _ = self.move_to_target(self.lifter_x, self.lifter_y, self.lifter_theta,
+                                                        self.exchange_x, self.exchange_y,
+                                                        self.lifter_pid_x, self.lifter_pid_theta, dt)
+                    
+                    # ✅ REDUCE velocity by 50% when carrying crate
+                    vx = vx * 0.5
+                    w = w * 0.5
+                    
+                    if should_log:
+                        self.get_logger().info(f'[LIFTER] Moving to exchange: Dist={dist:.2f}m (carrying crate)')
+                    
+                    if dist < 0.25:
+                        if should_log:
+                            self.get_logger().info('✓ LIFTER: At exchange! Waiting for runner...')
+                        self.publish_lifter_wheels(0.0, 0.0)
+                        self.lifter_state = 'waiting_for_runner_pickup'
+                        self.lifter_timer = now
+                    else:
+                        self.publish_lifter_wheels(vx, w)
 
         elif self.lifter_state == 'waiting_for_runner_pickup':
             self.publish_lifter_wheels(0.0, 0.0)
