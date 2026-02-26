@@ -105,8 +105,8 @@ class MultiRobotController(Node):
         self.wheel_separation_y = 0.4
 
         # ========== PID CONTROLLERS - TUNED FOR SMOOTH MOVEMENT ==========
-        pid_params_x = {'kp': 0.4, 'ki': 0.0, 'kd': 0.2, 'max_out': self.max_vel}
-        pid_params_theta = {'kp': 0.4, 'ki': 0.0, 'kd': 0.2, 'max_out': 1.5}
+        pid_params_x = {'kp': 0.6, 'ki': 0.0001, 'kd': 0.3, 'max_out': self.max_vel}
+        pid_params_theta = {'kp': 0.6, 'ki': 0.0001, 'kd': 0.3, 'max_out': 1.5}
         
         self.lifter_pid_x = PID(**pid_params_x)
         self.lifter_pid_theta = PID(**pid_params_theta)
@@ -266,13 +266,13 @@ class MultiRobotController(Node):
         # ========== LIFTER STATE MACHINE ==========
         if self.lifter_state == 'moving_to_crate':
             vx, w, dist, _ = self.move_to_target(self.lifter_x, self.lifter_y, self.lifter_theta, 
-                                                   self.crate_x - 0.3, self.crate_y, 
+                                                   self.crate_x - 0.33, self.crate_y , 
                                                    self.lifter_pid_x, self.lifter_pid_theta, dt)
             
             if should_log:
                 self.get_logger().info(f'[LIFTER] Moving to crate: Dist={dist:.2f}m')
             
-            if dist < 0.25:
+            if dist < 0.2:
                 if should_log:
                     self.get_logger().info('✓ LIFTER: Crate reached! Waiting...')
                 self.publish_lifter_wheels(0.0, 0.0)
@@ -294,6 +294,7 @@ class MultiRobotController(Node):
                 self.lifter_timer = now
 
         elif self.lifter_state == 'lowering_for_crate':
+            # ✅ WHEELS AT ZERO - NO MOVEMENT
             self.publish_lifter_wheels(0.0, 0.0)
             self.lifter_arm_base = 1.57
             self.lifter_arm_elbow = 1.57
@@ -301,41 +302,62 @@ class MultiRobotController(Node):
             elapsed = (now - self.lifter_timer).nanoseconds / 1e9
             if elapsed > 2.0:
                 if should_log:
-                    self.get_logger().info('[LIFTER] Attaching crate...')
+                    self.get_logger().info('[LIFTER] Arm fully lowered - requesting attach...')
+                # ✅ Call attach service
                 future = self.call_attach_service("lifter1", "gripper_link", "crate_red_1", "box_link")
                 if future:
                     self.lifter_attach_future = future
-                    self.lifter_state = 'waiting_for_attach'
+                    self.lifter_state = 'service_attach_requested'  # ✅ NEW STATE
                     self.lifter_timer = now
 
-        elif self.lifter_state == 'waiting_for_attach':
-            self.publish_lifter_wheels(0.0, 0.0)
-            self.lifter_arm_base = 1.57
+        elif self.lifter_state == 'service_attach_requested':
+            # ✅ CRITICAL: SERVICE IS BEING PROCESSED - WHEELS MUST STAY AT ZERO
+            self.publish_lifter_wheels(0.0, 0.0)  # ✅ ZERO VELOCITY
+            self.lifter_arm_base = 1.57  # ✅ ARM STAYS DOWN
             self.lifter_arm_elbow = 1.57
             self.publish_lifter_arm()
             
+            # Wait for service to complete
             if self.lifter_attach_future and self.lifter_attach_future.done():
                 try:
                     self.lifter_attach_future.result()
                     if should_log:
-                        self.get_logger().info('✓ LIFTER: Crate attached! Lifting...')
-                    self.lifter_state = 'lifting_after_attach'
+                        self.get_logger().info('✓✓✓ LIFTER: CRATE SUCCESSFULLY ATTACHED!')
+                    self.lifter_state = 'crate_attached'  # ✅ NEW STATE
                     self.lifter_timer = now
                     self.lifter_attach_future = None
                 except Exception as e:
                     if should_log:
-                        self.get_logger().error(f'Attach failed: {e}')
+                        self.get_logger().error(f'✗ Attach failed: {e}')
+                    # ✅ Retry: go back to lowering
                     self.lifter_state = 'lowering_for_crate'
+                    self.lifter_timer = now
+
+        elif self.lifter_state == 'crate_attached':
+            # ✅ CRATE IS ATTACHED - STILL NO MOVEMENT!
+            # Keep wheels at zero and arm down for stability
+            self.publish_lifter_wheels(0.0, 0.0)  # ✅ ZERO VELOCITY
+            self.lifter_arm_base = 1.57
+            self.lifter_arm_elbow = 1.57
+            self.publish_lifter_arm()
+            
+            elapsed = (now - self.lifter_timer).nanoseconds / 1e9
+            if elapsed > 0.5:  # ✅ Wait 0.5s for physics to settle
+                if should_log:
+                    self.get_logger().info('[LIFTER] Crate secured - lifting arm...')
+                self.lifter_state = 'lifting_after_attach'
+                self.lifter_timer = now
 
         elif self.lifter_state == 'lifting_after_attach':
-            self.publish_lifter_wheels(0.0, 0.0)
-            self.lifter_arm_base = 0.0
+            # ✅ NOW LIFT ARM - WHEELS STILL AT ZERO
+            self.publish_lifter_wheels(0.0, 0.0)  # ✅ ZERO VELOCITY
+            self.lifter_arm_base = 0.0  # ✅ RAISE ARM GRADUALLY
             self.lifter_arm_elbow = 0.0
             self.publish_lifter_arm()
             elapsed = (now - self.lifter_timer).nanoseconds / 1e9
             if elapsed > 2.0:
                 if should_log:
-                    self.get_logger().info('✓ LIFTER: Moving to exchange...')
+                    self.get_logger().info('✓ LIFTER: Arm raised! Moving to exchange...')
                 self.lifter_state = 'moving_to_exchange'
                 self.lifter_pid_x.reset()
                 self.lifter_pid_theta.reset()
@@ -461,7 +483,7 @@ class MultiRobotController(Node):
             
             if dist < 0.15:
                 if should_log:
-                    self.get_logger().info('✓ RUNNER: At drop zone! Lowering arm...')
+                    self.get_logger().info('✓ RUNNER: At drop zone! Setting piston...')
                 self.publish_runner_wheels(0.0, 0.0)
                 self.runner_piston = 0.0
                 self.publish_runner_piston()
