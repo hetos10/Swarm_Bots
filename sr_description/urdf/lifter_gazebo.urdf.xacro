@@ -34,6 +34,9 @@
       <kd>100.0</kd>
     </gazebo>
 
+    <gazebo reference="gripper_joint">
+        <preserveFixedJoint>true</preserveFixedJoint>
+    </gazebo>
     <gazebo>
       <plugin filename="libignition-gazebo-joint-state-publisher-system.so" 
               name="ignition::gazebo::systems::JointStatePublisher">

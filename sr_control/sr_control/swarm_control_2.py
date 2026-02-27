@@ -6,6 +6,7 @@ Multi-Robot Differential Drive Controller - PRODUCTION READY
 - RUNNER: Moves to exchange, receives crate, delivers to drop zone
 - Synchronized handoff with proper arm control
 - All timing delays and waiting states implemented
+- FIX: Prevent double attach/detach service calls
 '''
 
 import rclpy
@@ -92,6 +93,8 @@ class MultiRobotController(Node):
         self.lifter_timer = None
         self.lifter_attach_future = None
         self.lifter_detach_future = None
+        self.lifter_attach_called = False  # ✅ ADDED: Prevent double attach
+        self.lifter_detach_called = False  # ✅ ADDED: Prevent double detach
         
         # ========== RUNNER STATE ==========
         self.runner_state = 'moving_to_exchange'
@@ -99,6 +102,8 @@ class MultiRobotController(Node):
         self.runner_timer = None
         self.runner_attach_future = None
         self.runner_detach_future = None
+        self.runner_attach_called = False  # ✅ ADDED: Prevent double attach
+        self.runner_detach_called = False  # ✅ ADDED: Prevent double detach
 
         # ========== WHEEL PARAMETERS ==========
         self.wheel_radius = 0.1
@@ -294,7 +299,6 @@ class MultiRobotController(Node):
                 self.lifter_timer = now
 
         elif self.lifter_state == 'lowering_for_crate':
-            # ✅ WHEELS AT ZERO - NO MOVEMENT
             self.publish_lifter_wheels(0.0, 0.0)
             self.lifter_arm_base = 1.57
             self.lifter_arm_elbow = 1.57
@@ -303,86 +307,76 @@ class MultiRobotController(Node):
             if elapsed > 2.0:
                 if should_log:
                     self.get_logger().info('[LIFTER] Arm fully lowered - requesting attach...')
-                # ✅ Call attach service
-                future = self.call_attach_service("lifter1", "gripper_link", "crate_red_1", "box_link")
-                if future:
-                    self.lifter_attach_future = future
-                    self.lifter_state = 'service_attach_requested'  # ✅ NEW STATE
-                    self.lifter_timer = now
-
-        elif self.lifter_state == 'service_attach_requested':
-            # ✅ CRITICAL: SERVICE IS BEING PROCESSED - WHEELS MUST STAY AT ZERO
-            self.publish_lifter_wheels(0.0, 0.0)  # ✅ ZERO VELOCITY
-            self.lifter_arm_base = 1.57  # ✅ ARM STAYS DOWN
-            self.lifter_arm_elbow = 1.57
-            self.publish_lifter_arm()
-            
-            # Wait for service to complete
-            if self.lifter_attach_future and self.lifter_attach_future.done():
-                try:
-                    self.lifter_attach_future.result()
-                    if should_log:
-                        self.get_logger().info('✓✓✓ LIFTER: CRATE SUCCESSFULLY ATTACHED!')
-                    self.lifter_state = 'crate_attached'  # ✅ NEW STATE
-                    self.lifter_timer = now
-                    self.lifter_attach_future = None
-                except Exception as e:
-                    if should_log:
-                        self.get_logger().error(f'✗ Attach failed: {e}')
-                    # ✅ Retry: go back to lowering
-                    self.lifter_state = 'lowering_for_crate'
-                    self.lifter_timer = now
+                
+                # ✅ ONLY call attach ONCE
+                if not self.lifter_attach_called:
+                    future = self.call_attach_service("lifter1", "gripper_link", "crate_red_1", "box_link")
+                    if future:
+                        self.lifter_attach_future = future
+                        self.lifter_attach_called = True  # ✅ SET FLAG
+                
+                # Wait for service to complete
+                if self.lifter_attach_future and self.lifter_attach_future.done():
+                    try:
+                        self.lifter_attach_future.result()
+                        if should_log:
+                            self.get_logger().info('✓✓✓ LIFTER: CRATE SUCCESSFULLY ATTACHED!')
+                        self.lifter_state = 'crate_attached'
+                        self.lifter_timer = now
+                        self.lifter_attach_future = None
+                        self.lifter_attach_called = False  # ✅ RESET FLAG
+                    except Exception as e:
+                        if should_log:
+                            self.get_logger().error(f'✗ Attach failed: {e}')
+                        self.lifter_state = 'lowering_for_crate'
+                        self.lifter_timer = now
+                        self.lifter_attach_called = False  # ✅ RESET FLAG on failure
 
         elif self.lifter_state == 'crate_attached':
-           
-            self.publish_lifter_wheels(0.0, 0.0)  # ✅ ZERO VELOCITY
+            self.publish_lifter_wheels(0.0, 0.0)
             self.lifter_arm_base = 1.57
             self.lifter_arm_elbow = 1.57
             self.publish_lifter_arm()
             
             elapsed = (now - self.lifter_timer).nanoseconds / 1e9
-            if elapsed > 2.0:  # ✅ Wait 0.5s for physics to settle
+            if elapsed > 2.0:
                 if should_log:
                     self.get_logger().info('[LIFTER] Crate secured - lifting arm...')
                 self.lifter_state = 'lifting_after_attach'
                 self.lifter_timer = now
 
         elif self.lifter_state == 'lifting_after_attach':
-                    # ✅ GRADUAL ARM LIFTING - NOT INSTANT!
-                    self.publish_lifter_wheels(0.0, 0.0)
-                    
-                    elapsed = (now - self.lifter_timer).nanoseconds / 1e9
-                    
-                    # ✅ Gradually raise arm from 1.57 to 0 over 3 seconds
-                    if elapsed < 3.0:
-                        progress = elapsed / 3.0  # 0 to 1
-                        self.lifter_arm_base = 1.57 * (1.0 - progress)
-                        self.lifter_arm_elbow = 0.0
-                        self.publish_lifter_arm()
-                        
-                        if should_log and elapsed < 0.1:
-                            self.get_logger().info('[LIFTER] Lifting arm gradually...')
-                    else:
-                        # Arm fully raised
-                        self.lifter_arm_base = 0.0
-                        self.lifter_arm_elbow = 0.0
-                        self.publish_lifter_arm()
-                        
-                        if should_log:
-                            self.get_logger().info('✓ LIFTER: Arm fully raised! Preparing to move...')
-                        
-                        self.lifter_state = 'waiting_before_move'  # ✅ NEW STATE
-                        self.lifter_timer = now
+            self.publish_lifter_wheels(0.0, 0.0)
+            
+            elapsed = (now - self.lifter_timer).nanoseconds / 1e9
+            
+            if elapsed < 3.0:
+                progress = elapsed / 3.0
+                self.lifter_arm_base = 1.57 * (1.0 - progress)
+                self.lifter_arm_elbow = 0.0
+                self.publish_lifter_arm()
+                
+                if should_log and elapsed < 0.1:
+                    self.get_logger().info('[LIFTER] Lifting arm gradually...')
+            else:
+                self.lifter_arm_base = 0.0
+                self.lifter_arm_elbow = 0.0
+                self.publish_lifter_arm()
+                
+                if should_log:
+                    self.get_logger().info('✓ LIFTER: Arm fully raised! Preparing to move...')
+                
+                self.lifter_state = 'waiting_before_move'
+                self.lifter_timer = now
 
         elif self.lifter_state == 'waiting_before_move':
-            # ✅ NEW STATE: Wait before moving (let physics fully settle)
             self.publish_lifter_wheels(0.0, 0.0)
             self.lifter_arm_base = 0.0
             self.lifter_arm_elbow = 0.0
             self.publish_lifter_arm()
             
             elapsed = (now - self.lifter_timer).nanoseconds / 1e9
-            if elapsed > 1.0:  # ✅ Wait 1 second before moving
+            if elapsed > 1.0:
                 if should_log:
                     self.get_logger().info('✓ LIFTER: Moving to exchange...')
                 self.lifter_state = 'moving_to_exchange'
@@ -390,25 +384,24 @@ class MultiRobotController(Node):
                 self.lifter_pid_theta.reset()
 
         elif self.lifter_state == 'moving_to_exchange':
-                    vx, w, dist, _ = self.move_to_target(self.lifter_x, self.lifter_y, self.lifter_theta,
-                                                        self.exchange_x, self.exchange_y,
-                                                        self.lifter_pid_x, self.lifter_pid_theta, dt)
-                    
-                    # ✅ REDUCE velocity by 50% when carrying crate
-                    vx = vx * 0.25
-                    w = w * 0.25
-                    
-                    if should_log:
-                        self.get_logger().info(f'[LIFTER] Moving to exchange: Dist={dist:.2f}m (carrying crate)')
-                    
-                    if dist < 0.25:
-                        if should_log:
-                            self.get_logger().info('✓ LIFTER: At exchange! Waiting for runner...')
-                        self.publish_lifter_wheels(0.0, 0.0)
-                        self.lifter_state = 'waiting_for_runner_pickup'
-                        self.lifter_timer = now
-                    else:
-                        self.publish_lifter_wheels(vx, w)
+            vx, w, dist, _ = self.move_to_target(self.lifter_x, self.lifter_y, self.lifter_theta,
+                                                   self.exchange_x, self.exchange_y,
+                                                   self.lifter_pid_x, self.lifter_pid_theta, dt)
+            
+            vx = vx * 0.25
+            w = w * 0.25
+            
+            if should_log:
+                self.get_logger().info(f'[LIFTER] Moving to exchange: Dist={dist:.2f}m (carrying crate)')
+            
+            if dist < 0.25:
+                if should_log:
+                    self.get_logger().info('✓ LIFTER: At exchange! Waiting for runner...')
+                self.publish_lifter_wheels(0.0, 0.0)
+                self.lifter_state = 'waiting_for_runner_pickup'
+                self.lifter_timer = now
+            else:
+                self.publish_lifter_wheels(vx, w)
 
         elif self.lifter_state == 'waiting_for_runner_pickup':
             self.publish_lifter_wheels(0.0, 0.0)
@@ -419,9 +412,13 @@ class MultiRobotController(Node):
                 self.lifter_arm_base = 1.57
                 self.lifter_arm_elbow = 1.57
                 self.publish_lifter_arm()
-                future = self.call_detach_service("lifter1", "gripper_link", "crate_red_1", "box_link")
-                if future:
-                    self.lifter_detach_future = future
+                
+                # ✅ ONLY call detach ONCE
+                if not self.lifter_detach_called:
+                    future = self.call_detach_service("lifter1", "gripper_link", "crate_red_1", "box_link")
+                    if future:
+                        self.lifter_detach_future = future
+                        self.lifter_detach_called = True  # ✅ SET FLAG
                     self.lifter_state = 'waiting_for_detach'
                     self.lifter_timer = now
 
@@ -440,6 +437,7 @@ class MultiRobotController(Node):
                     self.lifter_pid_x.reset()
                     self.lifter_pid_theta.reset()
                     self.lifter_detach_future = None
+                    self.lifter_detach_called = False  # ✅ RESET FLAG
                 except:
                     pass
 
@@ -484,11 +482,15 @@ class MultiRobotController(Node):
                 if elapsed > 1.0:
                     if should_log:
                         self.get_logger().info('[RUNNER] Picking up crate...')
-                    future = self.call_attach_service("runner1", "base_link", "crate_red_1", "box_link")
-                    if future:
-                        self.runner_attach_future = future
-                        self.runner_state = 'waiting_for_pickup'
-                        self.runner_timer = now
+                    
+                    # ✅ ONLY call attach ONCE
+                    if not self.runner_attach_called:
+                        future = self.call_attach_service("runner1", "base_link", "crate_red_1", "box_link")
+                        if future:
+                            self.runner_attach_future = future
+                            self.runner_attach_called = True  # ✅ SET FLAG
+                            self.runner_state = 'waiting_for_pickup'
+                            self.runner_timer = now
 
         elif self.runner_state == 'waiting_for_pickup':
             self.publish_runner_wheels(0.0, 0.0)
@@ -501,7 +503,9 @@ class MultiRobotController(Node):
                     self.runner_pid_x.reset()
                     self.runner_pid_theta.reset()
                     self.runner_attach_future = None
+                    self.runner_attach_called = False  # ✅ RESET FLAG
                 except:
+                    self.runner_attach_called = False  # ✅ RESET FLAG on failure
                     self.runner_state = 'waiting_at_exchange'
 
         elif self.runner_state == 'moving_to_drop':
@@ -518,11 +522,15 @@ class MultiRobotController(Node):
                 self.publish_runner_wheels(0.0, 0.0)
                 self.runner_piston = 0.0
                 self.publish_runner_piston()
-                future = self.call_detach_service("runner1", "base_link", "crate_red_1", "box_link")
-                if future:
-                    self.runner_detach_future = future
-                    self.runner_state = 'waiting_for_drop_detach'
-                    self.runner_timer = now
+                
+                # ✅ ONLY call detach ONCE
+                if not self.runner_detach_called:
+                    future = self.call_detach_service("runner1", "base_link", "crate_red_1", "box_link")
+                    if future:
+                        self.runner_detach_future = future
+                        self.runner_detach_called = True  # ✅ SET FLAG
+                        self.runner_state = 'waiting_for_drop_detach'
+                        self.runner_timer = now
             else:
                 self.publish_runner_wheels(vx, w)
 
@@ -540,6 +548,7 @@ class MultiRobotController(Node):
                     self.runner_pid_x.reset()
                     self.runner_pid_theta.reset()
                     self.runner_detach_future = None
+                    self.runner_detach_called = False  # ✅ RESET FLAG
                 except:
                     pass
 

@@ -78,7 +78,7 @@
       <link name='box_link'>
         <!-- ===== VISUAL (Appearance) ===== -->
         <visual name='visual'>
-          <pose>0 0 -0.09 0 0 0</pose>
+          <pose>0 0 -0.10 0 0 0</pose>
           <cast_shadows>true</cast_shadows>
           <geometry>
             <box>
@@ -95,7 +95,7 @@
         
         <!-- ===== COLLISION (Physics) ===== -->
         <collision name='collision'>
-          <pose>0 0 -0.09 0 0 0</pose>
+          <pose>0 0 -0.10 0 0 0</pose>
           <geometry>
             <box>
               <size>0.18 0.18 0.18</size>
@@ -126,7 +126,7 @@
         <!-- ===== INERTIAL (Mass and Moment) ===== -->
         <inertial>
           <mass>0.01</mass>
-          <pose>0 0 -0.09 0 0 0</pose>
+          <pose>0 0 -0.10 0 0 0</pose>
           <inertia>
             <ixx>0.000001</ixx>
             <iyy>0.000001</iyy>
