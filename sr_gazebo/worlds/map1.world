@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
 <sdf version="1.6">
   <world name="default">
-    <physics name="10ms" type="ode">
+    <physics name="10ms" type="bullet">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
       <real_time_update_rate>1000</real_time_update_rate>
+
+
     </physics>
     <plugin
       filename="ignition-gazebo-physics-system"
@@ -23,18 +25,11 @@
       name="gz::sim::systems::Sensors">
       <render_engine>ogre</render_engine>
     </plugin>
-    <!-- <plugin name="ros2_linkattacher" filename="/home/hetos_10/swarm_bots_ws/src/Swarm_Bots/libignition_link_attacher.so"/> -->
     <scene>
       <grid>false</grid>
       <ambient>0.1 0.1 0.2</ambient>
       <background>0.05 0.05 0.1</background>
       <shadows>false</shadows>
-      <!-- <sky>
-        <time>22</time>
-        <sunrise>6</sunrise>
-        <sunset>18</sunset>
-        <clouds>false</clouds>
-      </sky> -->
     </scene>
 
     <include>
@@ -130,12 +125,12 @@
         
         <!-- ===== INERTIAL (Mass and Moment) ===== -->
         <inertial>
-          <mass>0.08</mass>
+          <mass>0.01</mass>
           <pose>0 0 -0.09 0 0 0</pose>
           <inertia>
-            <ixx>0.000432</ixx>
-            <iyy>0.000432</iyy>
-            <izz>0.000432</izz>
+            <ixx>0.000001</ixx>
+            <iyy>0.000001</iyy>
+            <izz>0.000001</izz>
             <ixy>0.0</ixy>
             <ixz>0.0</ixz>
             <iyz>0.0</iyz>

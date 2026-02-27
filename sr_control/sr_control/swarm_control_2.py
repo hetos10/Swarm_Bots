@@ -395,8 +395,8 @@ class MultiRobotController(Node):
                                                         self.lifter_pid_x, self.lifter_pid_theta, dt)
                     
                     # ✅ REDUCE velocity by 50% when carrying crate
-                    vx = vx * 0.5
-                    w = w * 0.5
+                    vx = vx * 0.25
+                    w = w * 0.25
                     
                     if should_log:
                         self.get_logger().info(f'[LIFTER] Moving to exchange: Dist={dist:.2f}m (carrying crate)')
