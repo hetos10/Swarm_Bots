@@ -308,14 +308,12 @@ class MultiRobotController(Node):
                 if should_log:
                     self.get_logger().info('[LIFTER] Arm fully lowered - requesting attach...')
                 
-                # ✅ ONLY call attach ONCE
                 if not self.lifter_attach_called:
                     future = self.call_attach_service("lifter1", "gripper_link", "crate_red_1", "box_link")
                     if future:
                         self.lifter_attach_future = future
-                        self.lifter_attach_called = True  # ✅ SET FLAG
+                        self.lifter_attach_called = True  
                 
-                # Wait for service to complete
                 if self.lifter_attach_future and self.lifter_attach_future.done():
                     try:
                         self.lifter_attach_future.result()
@@ -324,13 +322,13 @@ class MultiRobotController(Node):
                         self.lifter_state = 'crate_attached'
                         self.lifter_timer = now
                         self.lifter_attach_future = None
-                        self.lifter_attach_called = False  # ✅ RESET FLAG
+                        self.lifter_attach_called = False  
                     except Exception as e:
                         if should_log:
                             self.get_logger().error(f'✗ Attach failed: {e}')
                         self.lifter_state = 'lowering_for_crate'
                         self.lifter_timer = now
-                        self.lifter_attach_called = False  # ✅ RESET FLAG on failure
+                        self.lifter_attach_called = False 
 
         elif self.lifter_state == 'crate_attached':
             self.publish_lifter_wheels(0.0, 0.0)
@@ -413,12 +411,12 @@ class MultiRobotController(Node):
                 self.lifter_arm_elbow = 1.57
                 self.publish_lifter_arm()
                 
-                # ✅ ONLY call detach ONCE
+            
                 if not self.lifter_detach_called:
                     future = self.call_detach_service("lifter1", "gripper_link", "crate_red_1", "box_link")
                     if future:
                         self.lifter_detach_future = future
-                        self.lifter_detach_called = True  # ✅ SET FLAG
+                        self.lifter_detach_called = True  
                     self.lifter_state = 'waiting_for_detach'
                     self.lifter_timer = now
 
@@ -437,7 +435,7 @@ class MultiRobotController(Node):
                     self.lifter_pid_x.reset()
                     self.lifter_pid_theta.reset()
                     self.lifter_detach_future = None
-                    self.lifter_detach_called = False  # ✅ RESET FLAG
+                    self.lifter_detach_called = False  
                 except:
                     pass
 
@@ -482,13 +480,12 @@ class MultiRobotController(Node):
                 if elapsed > 1.0:
                     if should_log:
                         self.get_logger().info('[RUNNER] Picking up crate...')
-                    
-                    # ✅ ONLY call attach ONCE
+               
                     if not self.runner_attach_called:
                         future = self.call_attach_service("runner1", "base_link", "crate_red_1", "box_link")
                         if future:
                             self.runner_attach_future = future
-                            self.runner_attach_called = True  # ✅ SET FLAG
+                            self.runner_attach_called = True  
                             self.runner_state = 'waiting_for_pickup'
                             self.runner_timer = now
 
@@ -503,9 +500,9 @@ class MultiRobotController(Node):
                     self.runner_pid_x.reset()
                     self.runner_pid_theta.reset()
                     self.runner_attach_future = None
-                    self.runner_attach_called = False  # ✅ RESET FLAG
+                    self.runner_attach_called = False  
                 except:
-                    self.runner_attach_called = False  # ✅ RESET FLAG on failure
+                    self.runner_attach_called = False 
                     self.runner_state = 'waiting_at_exchange'
 
         elif self.runner_state == 'moving_to_drop':
@@ -522,13 +519,12 @@ class MultiRobotController(Node):
                 self.publish_runner_wheels(0.0, 0.0)
                 self.runner_piston = 0.0
                 self.publish_runner_piston()
-                
-                # ✅ ONLY call detach ONCE
+              
                 if not self.runner_detach_called:
                     future = self.call_detach_service("runner1", "base_link", "crate_red_1", "box_link")
                     if future:
                         self.runner_detach_future = future
-                        self.runner_detach_called = True  # ✅ SET FLAG
+                        self.runner_detach_called = True  
                         self.runner_state = 'waiting_for_drop_detach'
                         self.runner_timer = now
             else:
@@ -548,7 +544,7 @@ class MultiRobotController(Node):
                     self.runner_pid_x.reset()
                     self.runner_pid_theta.reset()
                     self.runner_detach_future = None
-                    self.runner_detach_called = False  # ✅ RESET FLAG
+                    self.runner_detach_called = False  
                 except:
                     pass
 

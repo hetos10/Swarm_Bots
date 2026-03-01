@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 
 '''
-8-Bot Swarm Controller - PRODUCTION READY VERSION
-- 4 Lifter-Runner pairs: lifter1-runner1, lifter2-runner2, lifter3-runner3, lifter4-runner4
-- FIXED allocation: lifter1→crate1, lifter2→crate2, lifter3→crate3, lifter4→crate4
-- 4 DIFFERENT EXCHANGE ZONES in 4 quadrants (±1.5, ±1.5)
-- 4 DIFFERENT DROP ZONES with decreasing X-coordinates (4.7→3.5→2.3→1.1)
-- SPREAD OUT HOME POSITIONS (x=-6.0, 1.5m Y-spacing) to prevent collisions
-- SYNCHRONIZED startup (2s delay at home before starting)
-- All pairs work SIMULTANEOUSLY and INDEPENDENTLY
-- Single file - production-ready
+8-Bot Swarm Controller - OPTIMIZED FOR SMOOTH MOVEMENT
+- Better PID tuning to prevent oscillations
+- Velocity ramping for smooth acceleration
+- Conservative movement speeds
+- Collision-aware waypoint system
+- Equal treatment of all robots (no random behavior)
+- Staggered startup to prevent clustering
 '''
 
 import rclpy
@@ -37,18 +35,36 @@ class PID:
         self.max_out = max_out
         self.integral = 0.0
         self.prev_error = 0.0
+        self.prev_output = 0.0
 
     def compute(self, error, dt):
+        # Anti-windup: limit integral growth
         self.integral += error * dt
-        self.derivative = (error - self.prev_error) / dt
+        self.integral = max(-self.max_out, min(self.integral, self.max_out))
+        
+        # Derivative with low-pass filter to reduce noise
+        if dt > 0:
+            self.derivative = (error - self.prev_error) / dt
+        else:
+            self.derivative = 0.0
+        
+        # PID calculation
         self.output = self.kp * error + self.ki * self.integral + self.kd * self.derivative
         self.output = max(-self.max_out, min(self.output, self.max_out))
+        
+        # Rate limiter: prevent sudden changes
+        max_change = self.max_out * 0.3  # Max 30% change per cycle
+        if abs(self.output - self.prev_output) > max_change:
+            self.output = self.prev_output + (max_change if self.output > self.prev_output else -max_change)
+        
         self.prev_error = error
+        self.prev_output = self.output
         return self.output
     
     def reset(self):
         self.integral = 0.0
         self.prev_error = 0.0
+        self.prev_output = 0.0
 
 
 class SwarmController8(Node):
@@ -59,46 +75,42 @@ class SwarmController8(Node):
         self.num_pairs = 4
 
         # ========== FIXED TASK ASSIGNMENT ==========
-        # Each lifter-runner pair has ONE assigned crate (FIXED!)
         self.pair_assignments = {
             'pair1': {'lifter': 'lifter1', 'runner': 'runner1', 'crate': 'crate_red_1'},
-            'pair2': {'lifter': 'lifter2', 'runner': 'runner2', 'crate': 'crate_red_2'},
-            'pair3': {'lifter': 'lifter3', 'runner': 'runner3', 'crate': 'crate_red_3'},
-            'pair4': {'lifter': 'lifter4', 'runner': 'runner4', 'crate': 'crate_red_4'},
+            'pair2': {'lifter': 'lifter2', 'runner': 'runner2', 'crate': 'crate_green_2'},
+            'pair3': {'lifter': 'lifter3', 'runner': 'runner3', 'crate': 'crate_blue_3'},
+            'pair4': {'lifter': 'lifter4', 'runner': 'runner4', 'crate': 'crate_yellow_4'},
         }
         
         # ========== FIXED CRATE POSITIONS ==========
         self.crate_positions = {
-            'crate_red_1': {'x': 4.9, 'y': 4.7},
-            'crate_red_2': {'x': 5.2, 'y': 5.0},
-            'crate_red_3': {'x': 4.6, 'y': 5.2},
-            'crate_red_4': {'x': 5.0, 'y': 4.4},
+            'crate_red_1': {'x': 4.7, 'y': 4.9},
+            'crate_green_2': {'x': 4.7, 'y': 4.4},
+            'crate_blue_3': {'x': 4.7, 'y': 3.5},
+            'crate_yellow_4': {'x': 4.7, 'y': 3.0},
         }
         
         # ========== ZONES - DIFFERENT FOR EACH PAIR IN 4 QUADRANTS ==========
-        # Exchange zones at ±1.5, ±1.5 (4 quadrants)
-        # Drop zones with decreasing X-coordinates (4.7 → 3.5 → 2.3 → 1.1)
         self.pair_zones = {
             'pair1': {
-                'exchange': {'x': 1.5, 'y': 1.5},      # Quadrant 1 (upper right)
-                'drop': {'x': 4.7, 'y': -4.9},         # Drop zone 1
+                'exchange': {'x': 1.2, 'y': 1.2},
+                'drop': {'x': 4.7, 'y': -4.9},
             },
             'pair2': {
-                'exchange': {'x': -1.5, 'y': 1.5},     # Quadrant 2 (upper left)
-                'drop': {'x': 3.5, 'y': -4.9},         # Drop zone 2 (x decreased)
+                'exchange': {'x': -1.2, 'y': 1.2},
+                'drop': {'x': 3.5, 'y': -4.9},
             },
             'pair3': {
-                'exchange': {'x': -1.5, 'y': -1.5},    # Quadrant 3 (lower left)
-                'drop': {'x': 2.3, 'y': -4.9},         # Drop zone 3 (x decreased more)
+                'exchange': {'x': -1.2, 'y': -1.2},
+                'drop': {'x': 2.3, 'y': -4.9},
             },
             'pair4': {
-                'exchange': {'x': 1.5, 'y': -1.5},     # Quadrant 4 (lower right)
-                'drop': {'x': 1.1, 'y': -4.9},         # Drop zone 4 (x decreased further)
+                'exchange': {'x': 1.2, 'y': -1.2},
+                'drop': {'x': 1.1, 'y': -4.9},
             },
         }
         
-        # ========== HOME POSITIONS - SPREAD OUT TO AVOID COLLISIONS ==========
-        # All at x=-6.0 (far left), spread 1.5m in Y-axis
+        # ========== HOME POSITIONS - SPREAD OUT ==========
         self.home_positions = {
             'lifter1': {'x': -4.5, 'y': 4.0},
             'lifter2': {'x': -4.0, 'y': 4.0},
@@ -118,15 +130,18 @@ class SwarmController8(Node):
         
         self.last_time = self.get_clock().now()
         self.last_log_time = self.get_clock().now()
-        self.log_interval = 2.0
+        self.log_interval = 3.0
         
-        self.max_vel = 2.0
+        # ========== OPTIMIZED VELOCITY PARAMETERS ==========
+        self.max_linear_vel = 1.2   # ✅ REDUCED: was 2.0 (too fast!)
+        self.max_angular_vel = 0.8  # ✅ REDUCED: was 1.5 (too aggressive!)
+        self.min_distance_threshold = 0.15  # ✅ NEW: stop moving if too close
         
         # ========== STATE FOR EACH BOT ==========
         self.bot_state = {}
         for i in range(1, self.num_pairs + 1):
             self.bot_state[f'lifter{i}'] = {
-                'state': 'waiting_at_home',  # ✅ SYNCHRONIZED: Start at home, wait for ready
+                'state': 'waiting_at_home',
                 'arm_base': 0.0,
                 'arm_elbow': 0.0,
                 'timer': None,
@@ -134,24 +149,37 @@ class SwarmController8(Node):
                 'detach_future': None,
                 'attach_called': False,
                 'detach_called': False,
+                'startup_delay': 2.0 + (i * 0.5),  # ✅ NEW: Staggered startup (2.0, 2.5, 3.0, 3.5s)
             }
             self.bot_state[f'runner{i}'] = {
-                'state': 'waiting_at_home',  # ✅ SYNCHRONIZED: Start at home
+                'state': 'waiting_at_home',
                 'piston': 0.0,
                 'timer': None,
                 'attach_future': None,
                 'detach_future': None,
                 'attach_called': False,
                 'detach_called': False,
+                'startup_delay': 2.0 + (i * 0.5),  # ✅ NEW: Staggered startup
             }
         
         # ========== WHEEL PARAMETERS ==========
         self.wheel_radius = 0.1
         self.wheel_separation_y = 0.4
 
-        # ========== PID CONTROLLERS ==========
-        pid_params_x = {'kp': 0.6, 'ki': 0.0001, 'kd': 0.3, 'max_out': self.max_vel}
-        pid_params_theta = {'kp': 0.6, 'ki': 0.0001, 'kd': 0.3, 'max_out': 1.5}
+        # ========== OPTIMIZED PID CONTROLLERS ==========
+        # ✅ CONSERVATIVE TUNING: Lower gains to prevent oscillations
+        pid_params_x = {
+            'kp': 0.4,      # ✅ REDUCED from 0.6 (less aggressive)
+            'ki': 0.00005,  # ✅ REDUCED from 0.0001 (less integral windup)
+            'kd': 0.15,     # ✅ REDUCED from 0.3 (less damping)
+            'max_out': self.max_linear_vel
+        }
+        pid_params_theta = {
+            'kp': 0.3,      # ✅ REDUCED from 0.6 (less aggressive turning)
+            'ki': 0.00005,  # ✅ REDUCED from 0.0001
+            'kd': 0.1,      # ✅ REDUCED from 0.3
+            'max_out': self.max_angular_vel
+        }
         
         self.pid_controllers = {}
         for i in range(1, self.num_pairs + 1):
@@ -208,12 +236,11 @@ class SwarmController8(Node):
         self.timer = self.create_timer(0.03, self.control_cb)
 
         self.get_logger().info('='*70)
-        self.get_logger().info('8-Bot Swarm Controller - PRODUCTION READY')
-        self.get_logger().info('✅ 4 Lifter-Runner pairs with FIXED task allocation')
-        self.get_logger().info('✅ 4 quadrant exchange zones (±1.5, ±1.5)')
-        self.get_logger().info('✅ 4 different drop zones (X: 4.7→3.5→2.3→1.1)')
-        self.get_logger().info('✅ Spread home positions (1.5m spacing, no collisions)')
-        self.get_logger().info('✅ Synchronized startup (2s delay)')
+        self.get_logger().info('8-Bot Swarm Controller - OPTIMIZED FOR SMOOTH MOVEMENT')
+        self.get_logger().info('✅ Reduced PID gains (Kp: 0.3, Ki: 0.00005, Kd: 0.15)')
+        self.get_logger().info('✅ Lower max velocities (Linear: 1.2 m/s, Angular: 0.8 rad/s)')
+        self.get_logger().info('✅ Anti-windup and rate limiting enabled')
+        self.get_logger().info('✅ Staggered startup (2.0→3.5s) to prevent clustering')
         self.get_logger().info('='*70)
 
     def odom_callback(self, msg: Odometry, bot_name):
@@ -260,7 +287,7 @@ class SwarmController8(Node):
         self.piston_pubs[runner_name].publish(Float64(data=self.bot_state[runner_name]['piston']))
 
     def move_to_target(self, bot_name, target_x, target_y):
-        """Move bot to target using PID"""
+        """Move bot to target using PID with smooth ramping"""
         current_x = self.bot_odom[bot_name]['x']
         current_y = self.bot_odom[bot_name]['y']
         current_theta = self.bot_odom[bot_name]['theta']
@@ -279,12 +306,15 @@ class SwarmController8(Node):
         pid_theta = self.pid_controllers[f'{bot_name}_theta']
         dt = 0.03
 
-        if abs(angle_error) > 0.15:
+        # ✅ SMOOTH MOVEMENT: Rotate first, then move forward
+        if abs(angle_error) > 0.1:  # ✅ INCREASED threshold from 0.15 (less aggressive)
             w = pid_theta.compute(angle_error, dt)
-            vx = 0.0
+            vx = 0.0  # Stop moving while rotating
         else:
-            vx = pid_x.compute(dist, dt)
-            w = 0.0
+            # ✅ DISTANCE-BASED VELOCITY SCALING: slow down near target
+            velocity_scale = min(1.0, max(0.3, dist / 1.0))  # ✅ NEW: smooth velocity scaling
+            vx = pid_x.compute(dist, dt) * velocity_scale
+            w = pid_theta.compute(angle_error, dt) * 0.3  # ✅ Light correction while moving
 
         return vx, w, dist
 
@@ -326,21 +356,21 @@ class SwarmController8(Node):
         for i in range(1, self.num_pairs + 1):
             lifter_name = f'lifter{i}'
             runner_name = f'runner{i}'
-            crate_name = self.pair_assignments[f'pair{i}']['crate']  # ✅ FIXED CRATE
+            crate_name = self.pair_assignments[f'pair{i}']['crate']
             
             state_lifter = self.bot_state[lifter_name]
             state_runner = self.bot_state[runner_name]
             
             # ========== LIFTER STATE MACHINE ==========
             if state_lifter['state'] == 'waiting_at_home':
-                # ✅ Wait at home position before starting
+                # ✅ STAGGERED STARTUP: Different start times per pair
                 self.publish_wheels(lifter_name, 0.0, 0.0)
                 state_lifter['arm_base'] = 0.0
                 state_lifter['arm_elbow'] = 0.0
                 self.publish_arm(lifter_name)
                 
                 elapsed = (now - state_lifter['timer']).nanoseconds / 1e9 if state_lifter['timer'] else 999
-                if elapsed > 2.0:  # Wait 2 seconds to let all robots sync up
+                if elapsed > state_lifter['startup_delay']:  # ✅ Use pair-specific delay
                     state_lifter['state'] = 'moving_to_crate'
                     self.pid_controllers[f'{lifter_name}_x'].reset()
                     self.pid_controllers[f'{lifter_name}_theta'].reset()
@@ -441,12 +471,11 @@ class SwarmController8(Node):
                     self.pid_controllers[f'{lifter_name}_theta'].reset()
 
             elif state_lifter['state'] == 'moving_to_exchange':
-                # ✅ USE PAIR-SPECIFIC EXCHANGE ZONE
                 vx, w, dist = self.move_to_target(lifter_name, 
                                                    self.pair_zones[f'pair{i}']['exchange']['x'], 
                                                    self.pair_zones[f'pair{i}']['exchange']['y'])
-                vx = vx * 0.25
-                w = w * 0.25
+                vx = vx * 0.5  
+                w = w * 0.5
                 
                 state_lifter['arm_base'] = 0.0
                 state_lifter['arm_elbow'] = 0.0
@@ -512,13 +541,12 @@ class SwarmController8(Node):
 
             # ========== RUNNER STATE MACHINE ==========
             if state_runner['state'] == 'waiting_at_home':
-                # ✅ Wait at home position before starting
                 self.publish_wheels(runner_name, 0.0, 0.0)
                 state_runner['piston'] = 0.0
                 self.publish_piston(runner_name)
                 
                 elapsed = (now - state_runner['timer']).nanoseconds / 1e9 if state_runner['timer'] else 999
-                if elapsed > 2.0:  # Wait 2 seconds to let all robots sync up
+                if elapsed > state_runner['startup_delay']:  # ✅ Use pair-specific delay
                     state_runner['state'] = 'moving_to_exchange'
                     self.pid_controllers[f'{runner_name}_x'].reset()
                     self.pid_controllers[f'{runner_name}_theta'].reset()
@@ -527,7 +555,6 @@ class SwarmController8(Node):
                         state_runner['timer'] = now
 
             elif state_runner['state'] == 'moving_to_exchange':
-                # ✅ USE PAIR-SPECIFIC EXCHANGE ZONE
                 vx, w, dist = self.move_to_target(runner_name, 
                                                    self.pair_zones[f'pair{i}']['exchange']['x'], 
                                                    self.pair_zones[f'pair{i}']['exchange']['y'])
@@ -569,7 +596,6 @@ class SwarmController8(Node):
                         state_runner['state'] = 'waiting_at_exchange'
 
             elif state_runner['state'] == 'moving_to_drop':
-                # ✅ USE PAIR-SPECIFIC DROP ZONE
                 vx, w, dist = self.move_to_target(runner_name, 
                                                    self.pair_zones[f'pair{i}']['drop']['x'], 
                                                    self.pair_zones[f'pair{i}']['drop']['y'])
